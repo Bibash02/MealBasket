@@ -1,0 +1,183 @@
+<!-- {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up – MealBasket</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span>MealBasket</span>
+    </div>
+    <h2>Create your account</h2>
+    <p class="sub">Join thousands of home cooks today.</p>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="signup-name" placeholder="Jane Smith">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="signup-email" placeholder="jane@example.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="signup-password" placeholder="Minimum 6 characters">
+    </div>
+    <div class="form-group">
+      <label>I am a…</label>
+      <div class="role-selector">
+        <div class="role-option">
+          <input type="radio" name="signup-role" id="role-customer" value="customer" checked>
+          <label class="role-label" for="role-customer">
+            <i class="fa-solid fa-user"></i>
+            <span>Customer</span>
+            <small>Browse &amp; order meals</small>
+          </label>
+        </div>
+        <div class="role-option">
+          <input type="radio" name="signup-role" id="role-vendor" value="vendor">
+          <label class="role-label" for="role-vendor">
+            <i class="fa-solid fa-store"></i>
+            <span>Vendor</span>
+            <small>Sell your meal kits</small>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-auth" onclick="handleSignup()">Create Account</button>
+
+    <div class="auth-switch">
+      Already have an account? <a href="{% url 'signin' %}">Sign in</a>
+      &nbsp;·&nbsp; <a href="{% url 'home' %}">← Back to home</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+<script src="{% static 'js/shared.js' %}"></script>
+<script>
+function handleSignup() {
+  const name     = document.getElementById('signup-name').value.trim();
+  const email    = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const role     = document.querySelector('input[name="signup-role"]:checked').value;
+
+  if (!name || !email || !password) return showToast('Please fill all fields', 'error');
+  if (password.length < 6)          return showToast('Password must be 6+ characters', 'error');
+
+  const users = getUsers();
+  if (users.find(u => u.email === email)) return showToast('Email already registered', 'error');
+
+  const user = { id: 'u' + Date.now(), name, email, password, role };
+  users.push(user);
+  saveUsers(users);
+  saveCurrentUser(user);
+
+  showToast('Account created! Welcome 🎉', 'success');
+  setTimeout(() => {
+    window.location.href = role === 'vendor' ? 'vendor.html' : 'customer.html';
+  }, 800);
+}
+
+// Press Enter to submit
+document.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
+</script>
+</body>
+</html> -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up – MealBasket</title>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span>MealBasket</span>
+    </div>
+
+    <h2>Create your account</h2>
+    <p class="sub">Join thousands of home cooks today.</p>
+
+    <!-- Django messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="error-box">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="full_name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" required>
+      </div>
+
+      <div class="form-group">
+        <label>I am a…</label>
+
+        <div class="role-selector">
+
+          <label class="role-label">
+            <input type="radio" name="role" value="customer" checked>
+            <i class="fa-solid fa-user"></i>
+            Customer
+          </label>
+
+          <label class="role-label">
+            <input type="radio" name="role" value="vendor">
+            <i class="fa-solid fa-store"></i>
+            Vendor
+          </label>
+
+        </div>
+      </div>
+
+      <button type="submit" class="btn-auth">Create Account</button>
+
+    </form>
+
+    <div class="auth-switch">
+      Already have an account?
+      <a href="{% url 'signin' %}">Sign in</a>
+      &nbsp;·&nbsp;
+      <a href="{% url 'home' %}">← Back to home</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

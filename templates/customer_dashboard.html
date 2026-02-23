@@ -5,151 +5,319 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Customer Dashboard – MealBasket</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
-<link rel="stylesheet" href="{% static 'css/customer.css' %}">
 </head>
 <body>
 
-    <div id="customer-dashboard" class="page">
-    <div class="dashboard-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-        <div class="sidebar-logo">
-            <i class="fa-solid fa-basket-shopping"></i>
-            <span>MealBasket</span>
-        </div>
-        <div class="sidebar-user">
-            <div class="user-name" id="c-sidebar-name">{{ profile.full_name }}</div>
-            <div class="user-role">{{ profile.get_role_display }}</div>
-        </div>
-        <ul class="sidebar-nav">
-            <li><a class="active" onclick="showDashPanel('c-browse','this')"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
-            <li><a onclick="showDashPanel('c-orders','this')"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
-            <li><a onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">0</span></a></li>
-            <li><a onclick="showDashPanel('c-profile','this')"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
-        </ul>
-        <div class="sidebar-logout">
-            <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
-        </div>
-        </aside>
+<div class="dashboard-layout">
 
-        <!-- Main -->
-        <main class="main-content">
-
-        <!-- Browse Panel -->
-        <div class="dash-panel active" id="c-browse">
-            <div class="dash-header">
-            <h1>Browse Meals</h1>
-            <button class="btn-primary" onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> View Cart (<span id="cart-count">0</span>)</button>
-            </div>
-            <div class="search-wrap">
-            <div class="search-input-wrap">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input class="search-input" id="customer-search" placeholder="Search meals, ingredients, cuisine…" oninput="filterProducts()">
-            </div>
-            <select class="filter-select" id="customer-filter" onchange="filterProducts()">
-                <option value="">All Categories</option>
-                {% for category in categories %}
-                    <option value="{{ category.name|lower }}">{{ category.name }}</option>
-                {% endfor %}
-            </select>
-            </div>
-            <div class="meals-grid" id="customer-products-grid">
-                {% for product in products %}
-                <div class="meal-card"
-                    data-name="{{ product.name|lower }}"
-                    data-category="{{ product.category.name|lower }}">
-
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="meal-img">
-
-                    <div class="meal-body">
-
-                        <span class="meal-badge">
-                            <i class="fa-solid fa-tag"></i>
-                            {{ product.category.name }}
-                        </span>
-
-                        <h3>{{ product.name }}</h3>
-
-                        <!-- Vendor Name -->
-                        <div class="meal-vendor">
-                            <i class="fa-solid fa-store"></i>
-                            {{ product.vendor.full_name }}
-                        </div>
-
-                        <p>{{ product.description|truncatewords:18 }}</p>
-
-                        <div class="meal-meta">
-                            <span>
-                                <i class="fa-solid fa-money-bill-wave"></i>
-                                Rs. {{ product.price }}
-                            </span>
-                            <span>
-                                <i class="fa-solid fa-clock"></i>
-                                {{ product.cook_time }} mins
-                            </span>
-                        </div>
-
-                        <button class="btn-add" onclick="addToCart('{{ product.id }}')">
-                            Add to Cart
-                        </button>
-
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Orders Panel -->
-        <div class="dash-panel" id="c-orders">
-            <div class="dash-header"><h1>My Orders</h1></div>
-            <div id="orders-list">
-                {% if orders %}
-                    <ul class="order-list">
-                        {% for order in orders %}
-                        <li>
-                            <strong>{{ order.product.name }}</strong> —
-                            {{ order.quantity }} pcs — 
-                            <em>{{ order.status }}</em>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>You have no orders yet.</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Profile Panel -->
-        <div class="dash-panel" id="c-profile">
-            <div class="dash-header"><h1>My Profile</h1></div>
-            <div class="form-card">
-                <h2>Account Details</h2>
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="c-profile-name" value="{{ user.get_full_name }}">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="c-profile-email" value="{{ user.email }}">
-                </div>
-                <div class="form-group">
-                    <label>Delivery Address</label>
-                    <input type="text" value="{{ profile.address }}" placeholder="123 Main St, City">
-                </div>
-                <div class="form-actions">
-                    <button class="btn-save" onclick="showToast('Profile updated!','success')">Save Changes</button>
-                </div>
-            </div>
-        </div>
-
-        </main>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
     </div>
-    </div>  
-    <!-- ===== TOAST ===== -->
-    <div class="toast-wrap" id="toast-wrap"></div>
-    <script src="{% static 'js/main.js' %}"></script>
+    <div class="sidebar-user">
+      <div class="user-name">{{ profile.user.username }}</div>
+      <div class="user-role">Customer</div>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a onclick="showDashPanel('c-browse')" class="active"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
+      <li><a onclick="showDashPanel('c-orders')"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
+      <li><a onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">0</span></a></li>
+      <li><a onclick="showDashPanel('c-profile')"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+    </ul>
+    <div class="sidebar-logout">
+      <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ===== BROWSE PANEL ===== -->
+    <div class="dash-panel active" id="c-browse">
+      <div class="dash-header">
+        <h1>Browse Meals</h1>
+        <button class="btn-primary" onclick="openCart()">
+          <i class="fa-solid fa-cart-shopping"></i> View Cart (<span id="cart-count">0</span>)
+        </button>
+      </div>
+      <div class="search-wrap">
+        <div class="search-input-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input class="search-input" id="customer-search" placeholder="Search meals, ingredients, cuisine…" oninput="filterProducts()">
+        </div>
+        <select name="category" class="filter-select" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+              <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+      </div>
+      <!-- Products Grid -->
+      <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" class="product-img">
+          {% endif %}
+          <div class="product-info">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description|truncatewords:12 }}</p>
+            <div class="product-bottom">
+              <span class="price">Rs. {{ product.price }}</span>
+
+              <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-primary">
+                  <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                </button>
+              </form>
+
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>No meals available.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ===== ORDERS PANEL ===== -->
+    <div class="dash-panel" id="c-orders">
+      <div class="dash-header"><h1>My Orders</h1></div>
+      <div id="orders-list"></div>
+    </div>
+
+    <!-- ===== PROFILE PANEL ===== -->
+    <section id="profile" class="dash-panel">
+      <div class="dash-header">
+        <h1>My Profile</h1>
+      </div>
+
+      <div class="form-card">
+        <form method="POST" action="{% url 'update_customer_profile' %}">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="full_name" value="{{ profile.user.first_name }}">
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" value="{{ profile.user.email }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Address</label>
+            <input type="text" name="address" value="{{ profile.address }}">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-save">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCartOnOverlay(event)">
+  <div class="cart-drawer">
+    <h2>
+      Your Cart
+      <button onclick="closeCart()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--gray)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </h2>
+    <div id="cart-items-list"></div>
+    <div class="cart-total" id="cart-total-section" style="display:none">
+      <div class="cart-total-row"><span>Subtotal</span><span id="cart-subtotal">Rs.0.00</span></div>
+      <div class="cart-total-row"><span>Shipping</span><span style="color:var(--green)">Free</span></div>
+      <div class="cart-total-row bold"><span>Total</span><span id="cart-total-val">Rs.0.00</span></div>
+      <button class="btn-checkout" onclick="placeOrder()">Place Order <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+<script src="{% static 'js/shared.js' %}"></script>
+<script>
+// ===== INIT =====
+let currentUser = null;
+let cart = [];
+
+window.addEventListener('DOMContentLoaded', () => {
+  currentUser = requireAuth('customer');
+  if (!currentUser) return;
+
+  document.getElementById('sidebar-name').textContent = currentUser.name;
+  document.getElementById('c-profile-name').value = currentUser.name;
+  document.getElementById('c-profile-email').value = currentUser.email;
+
+  renderProducts();
+  renderOrders();
+  updateCartUI();
+});
+
+// ===== PRODUCTS =====
+function renderProducts(list) {
+  const products = list || getProducts();
+  const grid = document.getElementById('customer-products-grid');
+  if (!products.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-plate-wheat"></i><p>No meals found</p></div>`;
+    return;
+  }
+  grid.innerHTML = products.map(p => `
+    <div class="product-card">
+      <img src="${p.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'}" alt="${p.name}"
+           onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'">
+      <div class="product-body">
+        <span class="meal-badge"><i class="fa-solid fa-leaf"></i>${p.category}</span>
+        <h3>${p.name}</h3>
+        <p class="desc">${p.desc}</p>
+        <div class="product-meta">
+          <span class="product-price">$${parseFloat(p.price).toFixed(2)}</span>
+          <span class="product-time"><i class="fa-solid fa-clock"></i> ${p.time} min ${p.cal ? '· ' + p.cal + ' cal' : ''}</span>
+        </div>
+        <button class="btn-add" onclick="addToCart('${p.id}')"><i class="fa-solid fa-plus"></i> Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts() {
+  const q   = document.getElementById('customer-search').value.toLowerCase();
+  const cat = document.getElementById('customer-filter').value.toLowerCase();
+  const filtered = getProducts().filter(p => {
+    const matchQ   = !q   || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+    const matchCat = !cat || p.category.toLowerCase().includes(cat);
+    return matchQ && matchCat;
+  });
+  renderProducts(filtered);
+}
+
+// ===== CART =====
+function addToCart(productId) {
+  const products = getProducts();
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+  const existing = cart.find(i => i.id === productId);
+  if (existing) existing.qty++;
+  else cart.push({ ...product, qty: 1 });
+  updateCartUI();
+  showToast(`${product.name} added to cart!`, 'success');
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cart-count').textContent = total;
+  document.getElementById('cart-count-badge').textContent = total;
+
+  const listEl    = document.getElementById('cart-items-list');
+  const totalSec  = document.getElementById('cart-total-section');
+
+  if (!cart.length) {
+    listEl.innerHTML = `<div class="empty-state"><i class="fa-solid fa-cart-shopping"></i><p>Your cart is empty</p></div>`;
+    totalSec.style.display = 'none';
+    return;
+  }
+  totalSec.style.display = 'block';
+  listEl.innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <img src="${i.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'}"
+           onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'">
+      <div class="cart-item-info">
+        <h4>${i.name}</h4>
+        <p>$${parseFloat(i.price).toFixed(2)} / serving</p>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+          <span>${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+        </div>
+      </div>
+      <strong>$${(i.qty * i.price).toFixed(2)}</strong>
+    </div>
+  `).join('');
+
+  const subtotal = cart.reduce((s, i) => s + i.qty * i.price, 0);
+  document.getElementById('cart-subtotal').textContent   = '$' + subtotal.toFixed(2);
+  document.getElementById('cart-total-val').textContent  = '$' + subtotal.toFixed(2);
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+  updateCartUI();
+}
+
+function openCart()  { document.getElementById('cart-overlay').classList.add('open'); }
+function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); }
+function closeCartOnOverlay(e) { if (e.target === document.getElementById('cart-overlay')) closeCart(); }
+
+function placeOrder() {
+  if (!cart.length) return;
+  const orders = getOrders();
+  cart.forEach(item => {
+    orders.push({
+      id: 'o' + Date.now() + Math.random(),
+      userId: currentUser.id,
+      productId: item.id,
+      productName: item.name,
+      productImg: item.img,
+      qty: item.qty,
+      total: item.qty * item.price,
+      date: new Date().toLocaleDateString()
+    });
+  });
+  saveOrders(orders);
+  cart = [];
+  updateCartUI();
+  closeCart();
+  renderOrders();
+  showToast('Order placed! 🎉', 'success');
+  showDashPanel('c-orders');
+}
+
+// ===== ORDERS =====
+function renderOrders() {
+  const list = document.getElementById('orders-list');
+  const orders = getOrders().filter(o => o.userId === currentUser?.id);
+  if (!orders.length) {
+    list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-bag-shopping"></i><p>No orders yet. Start browsing meals!</p></div>`;
+    return;
+  }
+  list.innerHTML = orders.slice().reverse().map(o => `
+    <div class="order-card">
+      <img src="${o.productImg || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'}"
+           onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'">
+      <div class="order-info">
+        <h4>${o.productName}</h4>
+        <p>Qty: ${o.qty} · ${o.date}</p>
+      </div>
+      <span class="order-total">$${parseFloat(o.total).toFixed(2)}</span>
+    </div>
+  `).join('');
+}
+
+// ===== PROFILE =====
+function saveProfile() {
+  showToast('Profile updated!', 'success');
+}
+
+// ===== LOGOUT =====
+function handleLogout() {
+  clearCurrentUser();
+  window.location.href = 'index.html';
+}
+</script>
 </body>
 </html>

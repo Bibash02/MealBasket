@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import *
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
+from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
@@ -16,55 +17,68 @@ def auth(request):
 def test(request):
     return render(request, 'test.html')
 
+def signin(request):
+    return render(request, 'signin.html')
+
+def signup(request):
+    return render(request, 'signup.html')
 
 
-def signup_post(request):
-    if request.method == 'POST':
-        full_name = request.POST.get('signup_name')
-        email = request.POST.get('signup_email')
-        password = request.POST.get('signup_password')
-        role = request.POST.get('signup_role')
+def signup_view(request):
+    if request.method == "POST":
+        full_name = request.POST.get("full_name")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        role = request.POST.get("role")
 
         if User.objects.filter(username=email).exists():
-            messages.error(request, "Email already registered!")
-            return redirect('home')
+            messages.error(request, "Email already r    egistered")
+            return redirect("signup")
 
-        # Create User
-        user = User.objects.create_user(username=email, email=email, password=password)
+        # Create user
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password
+        )
 
-        # Create Profile
-        UserProfile.objects.create(user=user, full_name=full_name, role=role)
+        user.first_name = full_name
+        user.save()
 
-        messages.success(request, "Account created successfully! You can now sign in.")
-        return redirect('signin')
-    else:
-        return redirect('home')
+        # Create UserProfile
+        UserProfile.objects.create(
+            user=user,
+            role=role
+        )
+
+        login(request, user)
+
+        if role == "vendor":
+            return redirect("vendor_dashboard")
+        else:
+            return redirect("customer_dashboard")
+
+    return render(request, "signup.html")
     
-def signin_post(request):
+def signin_view(request):
     if request.method == "POST":
-        email = request.POST.get('signin_email')
-        password = request.POST.get('signin_password')
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
 
-            # Use the correct related name
-            profile = getattr(user, 'profile', None)
-            if profile:
-                if profile.role == 'vendor':  # lowercase
-                    return redirect('vendor_dashboard')
-                else:
-                    return redirect('customer_dashboard')
+            # Role-based redirect
+            if user.profile.role == "vendor":
+                return redirect("vendor_dashboard")
             else:
-                messages.error(request, "User profile not found!")
-                return redirect('home')
+                return redirect("customer_dashboard")
         else:
             messages.error(request, "Invalid email or password")
-            return redirect('signin')
-    else:
-        return redirect('home')
+
+    return render(request, "signin.html")
 
 def logout_view(request):
     logout(request)
@@ -85,6 +99,17 @@ def customer_dashboard(request):
     }
 
     return render(request, 'customer_dashboard.html', context)
+
+def update_customer_profile(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    if request.method == "POST":
+        profile.user.first_name = request.POST.get('full_name')
+        profile.address = request.POST.get('address')
+        profile.user.save()
+        profile.save()
+
+    return redirect('customer_dashboard')
 
 def add_to_cart(request, product_id):
     profile = get_object_or_404(UserProfile, user=request.user, role='customer')
@@ -112,6 +137,68 @@ def vender_dashboard(request):
         'products': products,
     }
     return render(request, 'vender_dashboard.html', context)
+
+def update_vendor_profile(request):
+    vendor_profile = get_object_or_404(UserProfile, user=request.user)
+
+    if request.method == 'POST':
+        vendor_profile.full_name = request.POST.get('full_name')
+        vendor_profile.address = request.POST.get('address')
+        vendor_profile.save()
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('vendor_dashboard')
+
+    context = {'vendor_profile': vendor_profile}
+    return render(request, 'update_vendor_profile.html', context)
+
+def add_product(request):
+    vendor_profile = get_object_or_404(UserProfile, user=request.user)
+    categories = Category.objects.filter(is_active=True)
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        category_id = request.POST.get('category')
+        price = request.POST.get('price')
+        cook_time = request.POST.get('cook_time')
+        calories = request.POST.get('calories') or None
+        image = request.FILES.get('image')
+
+        category = get_object_or_404(Category, id=category_id)
+
+        Product.objects.create(
+            vendor=vendor_profile,
+            name=name,
+            description=description,
+            category=category,
+            price=price,
+            cook_time=cook_time,
+            calories=calories,
+            image=image
+        )
+        return redirect('vendor_dashboard')
+
+    return render(request, 'add_product.html', {'categories': categories})
+
+def edit_product(request, pk):
+    vendor_profile = get_object_or_404(UserProfile, user=request.user)
+    product = get_object_or_404(Product, pk=pk, vendor=vendor_profile)
+    categories = Category.objects.filter(is_active=True)
+
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.description = request.POST.get('description')
+        category_id = request.POST.get('category')
+        product.category = get_object_or_404(Category, id=category_id)
+        product.price = request.POST.get('price')
+        product.cook_time = request.POST.get('cook_time')
+        product.calories = request.POST.get('calories') or None
+        if request.FILES.get('image'):
+            product.image = request.FILES.get('image')
+        product.save()
+        return redirect('vendor_dashboard')
+
+    return render(request, 'vendor_edit_product.html', {'product': product, 'categories': categories})
 
 def save_product(request):
     if request.method == "POST":
@@ -174,20 +261,14 @@ def edit_product(request, product_id):
 def delete_product(request, product_id):
     vendor_profile = get_object_or_404(UserProfile, user=request.user)
     product = get_object_or_404(Product, id=product_id, vendor=vendor_profile)
-    if request.method == "POST":
-        product.delete()
-    return redirect('vender_dashboard')
+    product.delete()
+    return redirect('vendor_dashboard')
 
-def save_vendor_profile(request):
-    if request.method == "POST":
-        profile = request.user
-        profile.business_name = request.POST.get('business_name')
-        profile.phone = request.POST.get('phone')
-        profile.address = request.POST.get('address')
-        profile.save()
+def my_products(request):
+    vendor_profile = get_object_or_404(UserProfile, user=request.user)
+    products = Product.objects.filter(vendor=vendor_profile).order_by('-created_at')
 
-        request.user.email = request.POST.get('email')
-        request.user.save()
-
-        return JsonResponse({'status': 'success', 'message': 'Profile updated successfully'})
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+    context = {
+        "products": products
+    }
+    return render(request, "vendor_product_list.html", context)

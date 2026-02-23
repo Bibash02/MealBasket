@@ -267,6 +267,16 @@ function addToCart(productId) {
   showToast(`${product.name} added to cart!`, 'success');
 }
 
+function addToCartFromButton(btn) {
+    const product = {
+        id: btn.dataset.id,
+        name: btn.dataset.name,
+        price: parseFloat(btn.dataset.price),
+        img: btn.dataset.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'
+    };
+    addToCart(product);
+}
+
 function updateCartUI() {
   const total = cart.reduce((s,i) => s + i.qty, 0);
   document.getElementById('cart-count').textContent = total;

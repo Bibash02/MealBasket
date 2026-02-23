@@ -5,214 +5,305 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MealBasket – Fresh · Local · Delivered</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>
+/* ===== HOME-SPECIFIC STYLES ===== */
+#home { padding-top:70px; }
+
+.hero {
+  position:relative; height: calc(100vh - 70px); min-height:600px;
+  display:flex; align-items:center; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background: url('https://images.unsplash.com/photo-1543353071-087092ec393a?w=1600&q=80') center/cover;
+}
+.hero-bg::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(90deg, rgba(27,42,35,0.75) 0%, rgba(27,42,35,0.3) 60%, transparent 100%);
+}
+.hero-content { position:relative; z-index:1; padding:0 7%; max-width:680px; }
+.hero-eyebrow {
+  font-size:0.78rem; font-weight:600; letter-spacing:0.18em;
+  color: var(--green-pale); margin-bottom:1.2rem; opacity:0;
+  animation: fadeUp .8s .2s forwards;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif; font-size:clamp(2.8rem,6vw,4.8rem);
+  font-weight:900; color:#fff; line-height:1.08; margin-bottom:1.2rem;
+  opacity:0; animation: fadeUp .8s .4s forwards;
+}
+.hero p {
+  font-size:1.05rem; color:rgba(255,255,255,0.85); line-height:1.7;
+  margin-bottom:2rem; max-width:480px; opacity:0; animation:fadeUp .8s .6s forwards;
+}
+.hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation:fadeUp .8s .8s forwards; }
+.hero-cta-primary {
+  background:var(--green); color:#fff; border:none;
+  padding:14px 28px; border-radius:50px; font-family:'DM Sans',sans-serif;
+  font-weight:600; font-size:1rem; cursor:pointer; display:flex; align-items:center; gap:8px;
+  transition:all .25s; text-decoration:none;
+}
+.hero-cta-primary:hover { background:var(--green-light); transform:translateY(-2px); }
+.hero-cta-secondary {
+  background:rgba(255,255,255,0.15); color:#fff;
+  border:2px solid rgba(255,255,255,0.5);
+  padding:14px 28px; border-radius:50px; font-family:'DM Sans',sans-serif;
+  font-weight:600; font-size:1rem; cursor:pointer; transition:all .25s;
+  backdrop-filter: blur(6px); text-decoration:none;
+}
+.hero-cta-secondary:hover { background:rgba(255,255,255,0.25); }
+.hero-note { margin-top:1.5rem; font-size:0.82rem; color:rgba(255,255,255,0.6); opacity:0; animation:fadeUp .8s 1s forwards; }
+
+/* SECTIONS */
+.section { padding:100px 7%; }
+.section-eyebrow {
+  font-size:0.75rem; font-weight:700; letter-spacing:0.2em;
+  color:var(--orange); text-transform:uppercase; margin-bottom:.8rem; text-align:center;
+}
+.section-title {
+  font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem);
+  font-weight:900; text-align:center; margin-bottom:4rem;
+}
+
+/* HOW IT WORKS */
+.steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3rem; max-width:960px; margin:0 auto; }
+.step { text-align:center; }
+.step-icon-wrap {
+  width:80px; height:80px; background:var(--green-pale); border-radius:20px;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 1.2rem; font-size:1.8rem; color:var(--green);
+}
+.step-num { font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:900; color:var(--border); margin-bottom:.5rem; line-height:1; }
+.step h3 { font-weight:700; font-size:1.05rem; margin-bottom:.6rem; }
+.step p { color:var(--gray); font-size:0.92rem; line-height:1.6; }
+
+/* MEALS */
+.meals-section { background:var(--white); }
+.meals-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:3rem; }
+.meals-header-left .section-title { text-align:left; margin-bottom:0; }
+.meals-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:2rem; }
+.meal-card {
+  background:var(--white); border-radius:var(--radius);
+  box-shadow:var(--shadow); overflow:hidden; transition:transform .25s, box-shadow .25s;
+}
+.meal-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+.meal-img { width:100%; height:220px; object-fit:cover; }
+.meal-body { padding:1.4rem; }
+.meal-card h3 { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:.5rem; }
+.meal-card p { color:var(--gray); font-size:0.88rem; line-height:1.55; margin-bottom:.9rem; }
+.meal-meta { display:flex; gap:1.2rem; }
+.meal-meta span { color:var(--gray); font-size:0.82rem; display:flex; align-items:center; gap:5px; }
+
+/* PRICING */
+.pricing-section { background:var(--cream); }
+.plans-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.8rem; max-width:1020px; margin:0 auto; }
+.plan-card {
+  background:var(--white); border-radius:var(--radius);
+  padding:2rem; border:2px solid transparent;
+  box-shadow:var(--shadow); transition:all .25s; position:relative;
+}
+.plan-card.featured { border-color:var(--green); }
+.plan-badge {
+  position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+  background:var(--green); color:#fff; font-size:0.75rem; font-weight:700;
+  padding:5px 16px; border-radius:50px; white-space:nowrap;
+}
+.plan-name { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:800; margin-bottom:.3rem; }
+.plan-desc { color:var(--gray); font-size:0.85rem; margin-bottom:1.2rem; }
+.plan-price { margin-bottom:1.5rem; }
+.plan-price .dollar { font-size:1.2rem; font-weight:700; vertical-align:top; line-height:1.8; color:var(--gray); }
+.plan-price .amount { font-family:'Playfair Display',serif; font-size:3rem; font-weight:900; line-height:1; }
+.plan-price .period { color:var(--gray); font-size:0.88rem; }
+.plan-btn {
+  width:100%; padding:12px; border-radius:50px; font-family:'DM Sans',sans-serif;
+  font-weight:700; font-size:0.95rem; cursor:pointer; transition:all .2s; margin-bottom:1.5rem;
+  text-decoration:none; display:block; text-align:center;
+}
+.plan-btn-outline { background:transparent; border:2px solid var(--border); color:var(--dark); }
+.plan-btn-outline:hover { border-color:var(--green); color:var(--green); }
+.plan-btn-filled { background:var(--green); border:none; color:#fff; }
+.plan-btn-filled:hover { background:var(--dark); }
+.plan-features { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+.plan-features li { display:flex; align-items:center; gap:.7rem; font-size:0.88rem; color:var(--gray); }
+.plan-features li i { color:var(--green); font-size:0.8rem; flex-shrink:0; }
+
+/* FOOTER */
+footer { background:var(--dark); color:rgba(255,255,255,0.7); padding:4rem 7% 2rem; }
+.footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:3rem; margin-bottom:3rem; }
+.footer-brand p { font-size:0.88rem; line-height:1.6; max-width:220px; margin-top:.8rem; }
+.footer-col h4 { color:#fff; font-weight:700; margin-bottom:1.2rem; font-size:0.95rem; }
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:.7rem; }
+.footer-col a { color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.88rem; transition:color .2s; }
+.footer-col a:hover { color:#fff; }
+.footer-bottom { border-top:1px solid rgba(255,255,255,0.1); padding-top:1.5rem; text-align:center; font-size:0.82rem; }
+.footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; font-weight:700; font-size:1.1rem; }
+.footer-logo i { color:var(--green-light); }
+
+@media(max-width:900px) {
+  .steps-grid, .plans-grid { grid-template-columns:1fr; max-width:480px; }
+  .footer-grid { grid-template-columns:1fr 1fr; }
+  .meals-header { flex-direction:column; align-items:flex-start; gap:1rem; }
+}
+</style>
 </head>
-<body>
+<body id="home">
 
-<!-- ===== HOME PAGE ===== -->
-<div id="home" class="page active">
-  <!-- Navbar -->
-  <nav class="navbar">
-    <a class="nav-logo" onclick="showPage('home')">
-      <i class="fa-solid fa-basket-shopping"></i>
-      MealBasket
-    </a>
-    <ul class="nav-links">
-      <li><a onclick="scrollToSection('how-it-works')">How It Works</a></li>
-      <li><a onclick="scrollToSection('our-meals')">Our Meals</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="btn-ghost" onclick="showPage('signin')">Log In</button>
-      <button class="btn-primary" onclick="showPage('signup')">Get Started</button>
+<!-- Navbar -->
+<nav class="navbar">
+  <a class="nav-logo" href="index.html">
+    <i class="fa-solid fa-basket-shopping"></i>
+    MealBasket
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#our-meals">Our Meals</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="btn-ghost" href="{% url 'signin' %}">Log In</a>
+    <a class="btn-primary" href="{% url 'signup' %}">Get Started</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">FRESH • LOCAL • DELIVERED</div>
+    <h1>Cook amazing meals at home</h1>
+    <p>Pre-portioned ingredients and chef-designed recipes delivered to your door. Dinner made easy, delicious, and fun.</p>
+    <div class="hero-ctas">
+      <a class="hero-cta-primary" href="signup.html">
+        Choose Your Meals <i class="fa-solid fa-arrow-right"></i>
+      </a>
+      <a class="hero-cta-secondary" href="#our-meals">See This Week's Menu</a>
     </div>
-  </nav>
+    <div class="hero-note">Starting at $7.99/serving · Free shipping · Cancel anytime</div>
+  </div>
+</section>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-      <div class="hero-eyebrow">FRESH • LOCAL • DELIVERED</div>
-      <h1>Cook amazing meals at home</h1>
-      <p>Pre-portioned ingredients and chef-designed recipes delivered to your door. Dinner made easy, delicious, and fun.</p>
-      <div class="hero-ctas">
-        <button class="hero-cta-primary" onclick="showPage('signup')">
-          Choose Your Meals <i class="fa-solid fa-arrow-right"></i>
-        </button>
-        <button class="hero-cta-secondary" onclick="scrollToSection('our-meals')">
-          See This Week's Menu
-        </button>
-      </div>
-      <div class="hero-note">Starting at $7.99/serving · Free shipping · Cancel anytime</div>
+<!-- How It Works -->
+<section class="section" id="how-it-works">
+  <div class="section-eyebrow">SIMPLE AS 1-2-3</div>
+  <h2 class="section-title">How It Works</h2>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
+      <div class="step-num">01</div>
+      <h3>Choose Your Recipes</h3>
+      <p>Browse our weekly menu and pick the meals you love. Filter by dietary needs, cuisine, or cook time.</p>
     </div>
-  </section>
-
-  <!-- How It Works -->
-  <section class="section" id="how-it-works">
-    <div class="section-eyebrow">SIMPLE AS 1-2-3</div>
-    <h2 class="section-title">How It Works</h2>
-    <div class="steps-grid">
-      <div class="step">
-        <div class="step-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
-        <div class="step-num">01</div>
-        <h3>Choose Your Recipes</h3>
-        <p>Browse our weekly menu and pick the meals you love. Filter by dietary needs, cuisine, or cook time.</p>
-      </div>
-      <div class="step">
-        <div class="step-icon-wrap"><i class="fa-solid fa-box"></i></div>
-        <div class="step-num">02</div>
-        <h3>We Deliver Fresh</h3>
-        <p>Pre-portioned ingredients arrive at your door in insulated packaging, staying fresh and ready to cook.</p>
-      </div>
-      <div class="step">
-        <div class="step-icon-wrap"><i class="fa-solid fa-hat-chef"></i></div>
-        <div class="step-num">03</div>
-        <h3>Cook & Enjoy</h3>
-        <p>Follow our simple step-by-step recipe cards. Most meals are ready in 30 minutes or less.</p>
-      </div>
+    <div class="step">
+      <div class="step-icon-wrap"><i class="fa-solid fa-box"></i></div>
+      <div class="step-num">02</div>
+      <h3>We Deliver Fresh</h3>
+      <p>Pre-portioned ingredients arrive at your door in insulated packaging, staying fresh and ready to cook.</p>
     </div>
-  </section>
-
-  <!-- Meals Section -->
-  <section class="section meals-section" id="our-meals">
-    <div class="meals-header">
-      <div class="meals-header-left">
-        <div class="section-eyebrow">THIS WEEK'S MENU</div>
-        <h2 class="section-title">Featured Meals</h2>
-      </div>
-      <button class="btn-primary" onclick="showPage('signup')">View Full Menu</button>
-    </div>
-    <div class="meals-grid" id="home-meals-grid"></div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="nav-logo footer-logo" onclick="showPage('home')">
-          <i class="fa-solid fa-basket-shopping"></i>
-          <span>MealBasket</span>
-        </a>
-        <p>Fresh ingredients and chef-crafted recipes delivered weekly to your door.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Menu</h4>
-        <ul>
-          <li><a>This Week</a></li>
-          <li><a>Meal Plans</a></li>
-          <li><a>Dietary Options</a></li>
-          <li><a>Add-Ons</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a>About Us</a></li>
-          <li><a>Sustainability</a></li>
-          <li><a>Careers</a></li>
-          <li><a>Blog</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Support</h4>
-        <ul>
-          <li><a>Help Center</a></li>
-          <li><a>Contact Us</a></li>
-          <li><a>Delivery Areas</a></li>
-          <li><a>Gift Cards</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">&copy; 2026 MealBasket. All rights reserved.</div>
-  </footer>
-</div>
-
-<!-- ===== SIGN UP PAGE ===== -->
-<div id="signup" class="page">
-  <div class="auth-page">
-    <div class="auth-card">
-      <form method="POST" action="{% url 'signup' %}">
-        {% csrf_token %}
-        <div class="auth-logo">
-          <i class="fa-solid fa-basket-shopping"></i>
-          <span>MealBasket</span>
-        </div>
-        <h2>Create your account</h2>
-        <p class="sub">Join thousands of home cooks today.</p>
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" name="signup_name" id="signup-name" placeholder="Jane Smith" required>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" name="signup_email" id="signup-email" placeholder="jane@example.com" required>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" name="signup_password" id="signup-password" placeholder="Minimum 6 characters" required>
-        </div>
-        <div class="form-group">
-          <label>I am a…</label>
-          <div class="role-selector">
-            <div class="role-option">
-              <input type="radio" name="signup_role" id="role-customer" value="customer" checked>
-              <label class="role-label" for="role-customer">
-                <i class="fa-solid fa-user"></i>
-                <span>Customer</span>
-                <small>Browse & order meals</small>
-              </label>
-            </div>
-            <div class="role-option">
-              <input type="radio" name="signup_role" id="role-vendor" value="vendor">
-              <label class="role-label" for="role-vendor">
-                <i class="fa-solid fa-store"></i>
-                <span>Vendor</span>
-                <small>Sell your meal kits</small>
-              </label>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btn-auth">Create Account</button>
-        <div class="auth-switch">
-          Already have an account? <a onclick="showPage('signin')">Sign in</a>
-          &nbsp;·&nbsp; <a onclick="showPage('home')">← Back to home</a>
-        </div>
-      </form>
+    <div class="step">
+      <div class="step-icon-wrap"><i class="fa-solid fa-hat-chef"></i></div>
+      <div class="step-num">03</div>
+      <h3>Cook & Enjoy</h3>
+      <p>Follow our simple step-by-step recipe cards. Most meals are ready in 30 minutes or less.</p>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ===== SIGN IN PAGE ===== -->
-<div id="signin" class="page">
-  <div class="auth-page">
-    <div class="auth-card">
-      <form method="POST" action="{% url 'signin' %}">
-        {% csrf_token %}
-        <div class="auth-logo">
-          <i class="fa-solid fa-basket-shopping"></i>
-          <span>MealBasket</span>
-        </div>
-        <h2>Welcome back</h2>
-        <p class="sub">Sign in to your account.</p>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" name="signin_email" id="signin-email" placeholder="jane@example.com" required>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" name="signin_password" id="signin-password" placeholder="Your password" required>
-        </div>
-        <button type="submit" class="btn-auth">Sign In</button>
-        <div class="auth-switch">
-          Don't have an account? <a onclick="showPage('signup')">Sign up</a>
-          &nbsp;·&nbsp; <a onclick="showPage('home')">← Back to home</a>
-        </div>
-      </form>
+<!-- Our Meals -->
+<section class="section meals-section" id="our-meals">
+  <div class="meals-header">
+    <div class="meals-header-left">
+      <div class="section-eyebrow" style="text-align:left">THIS WEEK'S MENU</div>
+      <h2 class="section-title">Featured Meals</h2>
+    </div>
+    <a class="btn-primary" href="signup.html">View Full Menu</a>
+  </div>
+  <div class="meals-grid" id="home-meals-grid"></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="footer-logo" href="index.html">
+        <i class="fa-solid fa-basket-shopping"></i>
+        MealBasket
+      </a>
+      <p>Fresh ingredients and chef-crafted recipes delivered weekly to your door.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Menu</h4>
+      <ul>
+        <li><a href="#">This Week</a></li>
+        <li><a href="#">Meal Plans</a></li>
+        <li><a href="#">Dietary Options</a></li>
+        <li><a href="#">Add-Ons</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Delivery Areas</a></li>
+        <li><a href="#">Gift Cards</a></li>
+      </ul>
     </div>
   </div>
-</div>
+  <div class="footer-bottom">&copy; 2026 MealBasket. All rights reserved.</div>
+</footer>
 
-<script src="{% static 'js/main.js' %}"></script>
+<div class="toast-wrap" id="toast-wrap"></div>
+<script src="shared.js"></script>
+<script>
+// Render featured meals on homepage
+function renderHomeMeals() {
+  const products = getProducts();
+  const grid = document.getElementById('home-meals-grid');
+  const featured = products.slice(0, 3);
+  grid.innerHTML = featured.map(p => `
+    <div class="meal-card">
+      <img class="meal-img" src="${p.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'">
+      <div class="meal-body">
+        <span class="meal-badge"><i class="fa-solid fa-leaf"></i>${p.category}</span>
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="meal-meta">
+          <span><i class="fa-solid fa-clock"></i> ${p.time} min</span>
+          ${p.cal ? `<span><i class="fa-solid fa-fire"></i> ${p.cal} cal</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+renderHomeMeals();
+
+// If already logged in, redirect to correct dashboard
+const user = getCurrentUser();
+if (user) {
+  // silently redirect
+  // window.location.href = user.role === 'vendor' ? 'vendor.html' : 'customer.html';
+}
+</script>
 </body>
 </html>

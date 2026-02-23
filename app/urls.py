@@ -6,15 +6,20 @@ urlpatterns = [
     path('auth', auth, name='auth'),
     path('', test, name='home'),
 
-    path('signup_post/', signup_post, name='signup'),
-    path('signin_post/', signin_post, name='signin'),
+    path('signup_view/', signup_view, name='signup'),
+    path('signin_view/', signin_view, name='signin'),
     path('logout', logout_view, name='logout'),
 
     path('customer/dashboard', customer_dashboard, name='customer_dashboard'),
     path('vendor/dashboard', vender_dashboard, name='vendor_dashboard'),
 
+    path('customer/update/profile', update_customer_profile, name='update_customer_profile'),
+    path('customer/add-to-cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
+
     path('vendor/save-product', save_product, name='save_product'),
+    path('vendor/product/list', my_products, name='vendor_product_list'),
+    path('vendor/product/add', add_product, name='add_product'),
     path('vendor/product/edit/<int:product_id>/', edit_product, name='edit_product'),
     path('vendor/product/delete/<int:product_id>/', delete_product, name='delete_product'),
-    path('vendor/profile', save_vendor_profile, name='vendor_profile'),
+    path('vendor/profile', update_vendor_profile, name='update_vendor_profile'),
 ]
