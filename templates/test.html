@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MealBasket – Fresh · Local · Delivered</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="home" class="page active">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="nav-logo" onclick="showPage('home')">
+      <i class="fa-solid fa-basket-shopping"></i>
+      MealBasket
+    </a>
+    <ul class="nav-links">
+      <li><a onclick="scrollToSection('how-it-works')">How It Works</a></li>
+      <li><a onclick="scrollToSection('our-meals')">Our Meals</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-ghost" onclick="showPage('signin')">Log In</button>
+      <button class="btn-primary" onclick="showPage('signup')">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">FRESH • LOCAL • DELIVERED</div>
+      <h1>Cook amazing meals at home</h1>
+      <p>Pre-portioned ingredients and chef-designed recipes delivered to your door. Dinner made easy, delicious, and fun.</p>
+      <div class="hero-ctas">
+        <button class="hero-cta-primary" onclick="showPage('signup')">
+          Choose Your Meals <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <button class="hero-cta-secondary" onclick="scrollToSection('our-meals')">
+          See This Week's Menu
+        </button>
+      </div>
+      <div class="hero-note">Starting at $7.99/serving · Free shipping · Cancel anytime</div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how-it-works">
+    <div class="section-eyebrow">SIMPLE AS 1-2-3</div>
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="step-num">01</div>
+        <h3>Choose Your Recipes</h3>
+        <p>Browse our weekly menu and pick the meals you love. Filter by dietary needs, cuisine, or cook time.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon-wrap"><i class="fa-solid fa-box"></i></div>
+        <div class="step-num">02</div>
+        <h3>We Deliver Fresh</h3>
+        <p>Pre-portioned ingredients arrive at your door in insulated packaging, staying fresh and ready to cook.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon-wrap"><i class="fa-solid fa-hat-chef"></i></div>
+        <div class="step-num">03</div>
+        <h3>Cook & Enjoy</h3>
+        <p>Follow our simple step-by-step recipe cards. Most meals are ready in 30 minutes or less.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Meals Section -->
+  <section class="section meals-section" id="our-meals">
+    <div class="meals-header">
+      <div class="meals-header-left">
+        <div class="section-eyebrow">THIS WEEK'S MENU</div>
+        <h2 class="section-title">Featured Meals</h2>
+      </div>
+      <button class="btn-primary" onclick="showPage('signup')">View Full Menu</button>
+    </div>
+    <div class="meals-grid" id="home-meals-grid"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="nav-logo footer-logo" onclick="showPage('home')">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>MealBasket</span>
+        </a>
+        <p>Fresh ingredients and chef-crafted recipes delivered weekly to your door.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Menu</h4>
+        <ul>
+          <li><a>This Week</a></li>
+          <li><a>Meal Plans</a></li>
+          <li><a>Dietary Options</a></li>
+          <li><a>Add-Ons</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a>About Us</a></li>
+          <li><a>Sustainability</a></li>
+          <li><a>Careers</a></li>
+          <li><a>Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a>Help Center</a></li>
+          <li><a>Contact Us</a></li>
+          <li><a>Delivery Areas</a></li>
+          <li><a>Gift Cards</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 MealBasket. All rights reserved.</div>
+  </footer>
+</div>
+
+<!-- ===== SIGN UP PAGE ===== -->
+<div id="signup" class="page">
+  <div class="auth-page">
+    <div class="auth-card">
+      <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+        <div class="auth-logo">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>MealBasket</span>
+        </div>
+        <h2>Create your account</h2>
+        <p class="sub">Join thousands of home cooks today.</p>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="signup_name" id="signup-name" placeholder="Jane Smith" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="signup_email" id="signup-email" placeholder="jane@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="signup_password" id="signup-password" placeholder="Minimum 6 characters" required>
+        </div>
+        <div class="form-group">
+          <label>I am a…</label>
+          <div class="role-selector">
+            <div class="role-option">
+              <input type="radio" name="signup_role" id="role-customer" value="customer" checked>
+              <label class="role-label" for="role-customer">
+                <i class="fa-solid fa-user"></i>
+                <span>Customer</span>
+                <small>Browse & order meals</small>
+              </label>
+            </div>
+            <div class="role-option">
+              <input type="radio" name="signup_role" id="role-vendor" value="vendor">
+              <label class="role-label" for="role-vendor">
+                <i class="fa-solid fa-store"></i>
+                <span>Vendor</span>
+                <small>Sell your meal kits</small>
+              </label>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth">Create Account</button>
+        <div class="auth-switch">
+          Already have an account? <a onclick="showPage('signin')">Sign in</a>
+          &nbsp;·&nbsp; <a onclick="showPage('home')">← Back to home</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIGN IN PAGE ===== -->
+<div id="signin" class="page">
+  <div class="auth-page">
+    <div class="auth-card">
+      <form method="POST" action="{% url 'signin' %}">
+        {% csrf_token %}
+        <div class="auth-logo">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>MealBasket</span>
+        </div>
+        <h2>Welcome back</h2>
+        <p class="sub">Sign in to your account.</p>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="signin_email" id="signin-email" placeholder="jane@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="signin_password" id="signin-password" placeholder="Your password" required>
+        </div>
+        <button type="submit" class="btn-auth">Sign In</button>
+        <div class="auth-switch">
+          Don't have an account? <a onclick="showPage('signup')">Sign up</a>
+          &nbsp;·&nbsp; <a onclick="showPage('home')">← Back to home</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

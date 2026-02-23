@@ -1,0 +1,1088 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MealBasket — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+
+<div id="page-signin" class="page active">
+  <div class="auth-wrap">
+
+    <!-- Visual -->
+    <div class="auth-visual">
+      <div class="auth-visual-bg"></div>
+      <div class="auth-visual-overlay"></div>
+      <div class="auth-brand">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <div class="auth-visual-content">
+        <div class="auth-visual-quote">"Good food is the foundation of genuine happiness."</div>
+        <div class="auth-visual-caption">Chef-crafted kits · Local Ingredients · Door Delivery</div>
+        <div class="auth-visual-dots">
+          <span class="on"></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="auth-form-panel">
+      <div class="auth-top-link">No account? <a onclick="goPage('page-signup')">Sign up</a></div>
+
+      <div class="form-heading fade-up">
+        <div class="eyebrow">Welcome back</div>
+        <h1>Sign in to<br>your account</h1>
+        <p>Enter your credentials to continue</p>
+      </div>
+
+      <div class="field fade-up delay-1">
+        <label>Email address</label>
+        <div class="input-wrap">
+          <i class="fa-regular fa-envelope"></i>
+          <input type="email" id="si-email" placeholder="you@example.com">
+        </div>
+        <div class="err-msg" id="si-email-err">Please enter a valid email</div>
+      </div>
+
+      <div class="field fade-up delay-2">
+        <label>Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="si-password" placeholder="Your password">
+        </div>
+        <div class="err-msg" id="si-pass-err">Password is required</div>
+      </div>
+
+      <button class="btn-submit fade-up delay-3" onclick="handleSignIn()">
+        <span class="btn-text">Sign In</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="or-divider fade-up delay-4">or try a demo account</div>
+
+      <div class="demo-hint fade-up delay-4">
+        <strong>Customer demo:</strong> customer@demo.com / demo1234
+        <span class="demo-fill" onclick="fillDemo('customer')"><i class="fa-solid fa-wand-magic-sparkles"></i> Fill</span><br>
+        <strong>Vendor demo:</strong> vendor@demo.com / demo1234
+        <span class="demo-fill" onclick="fillDemo('vendor')"><i class="fa-solid fa-wand-magic-sparkles"></i> Fill</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║           SIGN UP PAGE                  ║
+     ╚══════════════════════════════════════════╝ -->
+<div id="page-signup" class="page">
+  <div class="auth-wrap">
+
+    <div class="auth-visual">
+      <div class="auth-visual-bg" style="background-image:url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=900&q=85')"></div>
+      <div class="auth-visual-overlay"></div>
+      <div class="auth-brand">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <div class="auth-visual-content">
+        <div class="auth-visual-quote">"Cooking is love made visible."</div>
+        <div class="auth-visual-caption">Join 40,000+ home cooks & local vendors</div>
+        <div class="auth-visual-dots">
+          <span></span><span class="on"></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-form-panel" style="overflow-y:auto; padding: 3rem 4rem;">
+      <div class="auth-top-link">Have an account? <a onclick="goPage('page-signin')">Sign in</a></div>
+
+      <div class="form-heading fade-up">
+        <div class="eyebrow">Get started</div>
+        <h1>Create your<br>free account</h1>
+        <p>Join thousands of food lovers today</p>
+      </div>
+
+      <div class="field fade-up delay-1">
+        <label>Full name</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="su-name" placeholder="Jane Smith">
+        </div>
+        <div class="err-msg" id="su-name-err">Name is required</div>
+      </div>
+
+      <div class="field fade-up delay-1">
+        <label>Email address</label>
+        <div class="input-wrap">
+          <i class="fa-regular fa-envelope"></i>
+          <input type="email" id="su-email" placeholder="you@example.com">
+        </div>
+        <div class="err-msg" id="su-email-err">Valid email is required</div>
+      </div>
+
+      <div class="field fade-up delay-2">
+        <label>Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="su-password" placeholder="Minimum 6 characters">
+        </div>
+        <div class="err-msg" id="su-pass-err">Password must be 6+ characters</div>
+      </div>
+
+      <div class="field fade-up delay-3">
+        <label>I am a…</label>
+        <div class="role-grid">
+          <div class="role-card">
+            <input type="radio" name="su-role" id="role-customer" value="customer" checked>
+            <label for="role-customer">
+              <div class="icon"><i class="fa-solid fa-user"></i></div>
+              <div class="role-name">Customer</div>
+              <div class="role-desc">Browse & order fresh meal kits</div>
+            </label>
+          </div>
+          <div class="role-card">
+            <input type="radio" name="su-role" id="role-vendor" value="vendor">
+            <label for="role-vendor">
+              <div class="icon"><i class="fa-solid fa-store"></i></div>
+              <div class="role-name">Vendor</div>
+              <div class="role-desc">List & sell your meal kits</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-submit fade-up delay-4" onclick="handleSignUp()">
+        <span class="btn-text">Create Account</span>
+        <div class="spinner"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║        CUSTOMER DASHBOARD               ║
+     ╚══════════════════════════════════════════╝ -->
+<div id="page-customer" class="page">
+  <div class="shell">
+
+    <aside class="sidebar" id="sb-customer">
+      <div class="sb-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <div class="sb-user">
+        <div class="sb-avatar" id="c-avatar">JD</div>
+        <div class="sb-user-info">
+          <div class="name" id="c-sb-name">Jane Doe</div>
+          <div class="role">Customer</div>
+        </div>
+      </div>
+      <nav class="sb-nav">
+        <div class="sb-section-label">Menu</div>
+        <a class="active" onclick="cPanel('c-home', this)"><i class="fa-solid fa-house"></i> Home</a>
+        <a onclick="cPanel('c-browse', this)"><i class="fa-solid fa-utensils"></i> Browse Meals</a>
+        <a onclick="cPanel('c-orders', this)"><i class="fa-solid fa-bag-shopping"></i> My Orders</a>
+        <div class="sb-section-label">Account</div>
+        <a onclick="cPanel('c-profile', this)"><i class="fa-solid fa-circle-user"></i> Profile</a>
+      </nav>
+      <div class="sb-footer">
+        <div class="sb-logout" onclick="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Sign out</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h2 id="c-topbar-title">Welcome back</h2>
+          <p id="c-topbar-sub">What are you cooking today?</p>
+        </div>
+        <div class="topbar-right">
+          <button class="cart-btn" onclick="openCart()" title="View cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="cart-badge" id="cart-badge">0</span>
+          </button>
+          <div class="avatar-btn" id="c-topbar-avatar">JD</div>
+        </div>
+      </div>
+
+      <div class="page-content">
+
+        <!-- Home Panel -->
+        <div class="panel active" id="c-home">
+          <div class="stat-row">
+            <div class="stat-card green">
+              <div class="stat-icon green"><i class="fa-solid fa-bag-shopping"></i></div>
+              <div class="stat-val" id="c-stat-orders">0</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card gold">
+              <div class="stat-icon gold"><i class="fa-solid fa-dollar-sign"></i></div>
+              <div class="stat-val" id="c-stat-spent">$0</div>
+              <div class="stat-label">Amount Spent</div>
+            </div>
+            <div class="stat-card terra">
+              <div class="stat-icon terra"><i class="fa-solid fa-heart"></i></div>
+              <div class="stat-val" id="c-stat-meals">0</div>
+              <div class="stat-label">Meals Available</div>
+            </div>
+            <div class="stat-card blue">
+              <div class="stat-icon blue"><i class="fa-solid fa-cart-shopping"></i></div>
+              <div class="stat-val" id="c-stat-cart">0</div>
+              <div class="stat-label">Items in Cart</div>
+            </div>
+          </div>
+
+          <div class="section-hdr">
+            <div><h3>Featured This Week</h3><p>Hand-picked meal kits from our top vendors</p></div>
+            <button class="btn-primary" onclick="cPanel('c-browse', null)"><i class="fa-solid fa-arrow-right"></i> Browse All</button>
+          </div>
+          <div class="cards-grid" id="c-featured-grid"></div>
+        </div>
+
+        <!-- Browse Panel -->
+        <div class="panel" id="c-browse">
+          <div class="section-hdr" style="margin-bottom:1rem">
+            <div><h3>All Meals</h3><p id="browse-count">Loading meals…</p></div>
+          </div>
+          <div class="search-filter-bar">
+            <div class="search-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input class="search-inp" id="browse-search" placeholder="Search meals, cuisine, ingredients…" oninput="renderBrowse()">
+            </div>
+            <select class="filter-sel" id="browse-filter" onchange="renderBrowse()">
+              <option value="">All Categories</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="high protein">High Protein</option>
+              <option value="dairy-free">Dairy-Free</option>
+              <option value="gluten-free">Gluten-Free</option>
+            </select>
+          </div>
+          <div class="cards-grid" id="c-browse-grid"></div>
+        </div>
+
+        <!-- Orders Panel -->
+        <div class="panel" id="c-orders">
+          <div class="section-hdr">
+            <div><h3>My Orders</h3><p>Your order history</p></div>
+          </div>
+          <div class="tbl-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Meal</th>
+                  <th>Name</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="c-orders-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Profile Panel -->
+        <div class="panel" id="c-profile">
+          <div class="profile-header">
+            <div class="profile-avatar" id="c-profile-avatar">JD</div>
+            <div class="profile-info">
+              <h3 id="c-profile-name-display">Jane Doe</h3>
+              <p id="c-profile-email-display">jane@example.com</p>
+              <div class="profile-role-chip"><span class="chip chip-green"><i class="fa-solid fa-user"></i> Customer</span></div>
+            </div>
+          </div>
+          <div class="form-card">
+            <div class="form-card-title">Account Details</div>
+            <div class="form-row">
+              <div class="field-no-icon"><label>Full Name</label><input type="text" id="c-pf-name"></div>
+              <div class="field-no-icon"><label>Email</label><input type="email" id="c-pf-email" readonly style="opacity:.6;cursor:not-allowed"></div>
+            </div>
+            <div class="field-no-icon" style="margin-top:1rem"><label>Delivery Address</label><input type="text" id="c-pf-address" placeholder="123 Main Street, City, State"></div>
+            <div class="field-no-icon" style="margin-top:1rem"><label>Phone Number</label><input type="tel" id="c-pf-phone" placeholder="+1 555 000 0000"></div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="saveCustomerProfile()">Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </div><!-- /main -->
+  </div><!-- /shell -->
+</div>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║         VENDOR DASHBOARD                ║
+     ╚══════════════════════════════════════════╝ -->
+<div id="page-vendor" class="page">
+  <div class="shell">
+
+    <aside class="sidebar" id="sb-vendor">
+      <div class="sb-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <div class="sb-user">
+        <div class="sb-avatar" id="v-avatar" style="background:linear-gradient(135deg,var(--terracotta),var(--gold))">VD</div>
+        <div class="sb-user-info">
+          <div class="name" id="v-sb-name">Vendor Demo</div>
+          <div class="role" style="color:var(--gold)">Vendor</div>
+        </div>
+      </div>
+      <nav class="sb-nav">
+        <div class="sb-section-label">Dashboard</div>
+        <a class="active" onclick="vPanel('v-overview', this)"><i class="fa-solid fa-chart-line"></i> Overview</a>
+        <div class="sb-section-label">Products</div>
+        <a onclick="vPanel('v-products', this)"><i class="fa-solid fa-list"></i> My Products</a>
+        <a onclick="vPanel('v-add', this); resetProdForm()"><i class="fa-solid fa-circle-plus"></i> Add Product</a>
+        <div class="sb-section-label">Account</div>
+        <a onclick="vPanel('v-profile', this)"><i class="fa-solid fa-circle-user"></i> Profile</a>
+      </nav>
+      <div class="sb-footer">
+        <div class="sb-logout" onclick="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Sign out</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <h2 id="v-topbar-title">Vendor Dashboard</h2>
+          <p id="v-topbar-sub">Manage your meal kits</p>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-primary" onclick="vPanel('v-add',null);resetProdForm()"><i class="fa-solid fa-plus"></i> Add Product</button>
+          <div class="avatar-btn" id="v-topbar-avatar" style="background:linear-gradient(135deg,var(--terracotta),var(--gold))">VD</div>
+        </div>
+      </div>
+
+      <div class="page-content">
+
+        <!-- Overview Panel -->
+        <div class="panel active" id="v-overview">
+          <div class="stat-row">
+            <div class="stat-card green">
+              <div class="stat-icon green"><i class="fa-solid fa-box"></i></div>
+              <div class="stat-val" id="v-stat-products">0</div>
+              <div class="stat-label">Active Products</div>
+            </div>
+            <div class="stat-card gold">
+              <div class="stat-icon gold"><i class="fa-solid fa-dollar-sign"></i></div>
+              <div class="stat-val" id="v-stat-revenue">$0</div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card terra">
+              <div class="stat-icon terra"><i class="fa-solid fa-bag-shopping"></i></div>
+              <div class="stat-val" id="v-stat-orders">0</div>
+              <div class="stat-label">Orders Received</div>
+            </div>
+            <div class="stat-card blue">
+              <div class="stat-icon blue"><i class="fa-solid fa-star"></i></div>
+              <div class="stat-val" id="v-stat-rating">4.8</div>
+              <div class="stat-label">Avg Rating</div>
+            </div>
+          </div>
+
+          <div class="section-hdr">
+            <div><h3>Product Snapshot</h3><p>Your latest listed products</p></div>
+            <button class="btn-primary" onclick="vPanel('v-products',null)"><i class="fa-solid fa-arrow-right"></i> View All</button>
+          </div>
+          <div class="tbl-card">
+            <table>
+              <thead><tr><th>Image</th><th>Product</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="v-overview-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Products Panel -->
+        <div class="panel" id="v-products">
+          <div class="section-hdr" style="margin-bottom:1rem">
+            <div><h3>My Products</h3><p id="v-product-count">0 products</p></div>
+            <button class="btn-primary" onclick="vPanel('v-add',null);resetProdForm()"><i class="fa-solid fa-plus"></i> Add New</button>
+          </div>
+          <div class="search-filter-bar" style="margin-bottom:1.2rem">
+            <div class="search-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input class="search-inp" id="v-search" placeholder="Search your products…" oninput="renderVendorTable()">
+            </div>
+            <select class="filter-sel" id="v-filter" onchange="renderVendorTable()">
+              <option value="">All Categories</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="high protein">High Protein</option>
+              <option value="dairy-free">Dairy-Free</option>
+              <option value="gluten-free">Gluten-Free</option>
+            </select>
+          </div>
+          <div class="tbl-card">
+            <table>
+              <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Time</th><th>Cal</th><th>Actions</th></tr></thead>
+              <tbody id="v-products-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Add / Edit Product -->
+        <div class="panel" id="v-add">
+          <div class="section-hdr">
+            <div><h3 id="prod-form-title">Add New Product</h3><p>Fill in your meal kit details</p></div>
+          </div>
+          <div class="form-card">
+            <input type="hidden" id="pf-edit-id">
+            <div class="form-row">
+              <div class="field-no-icon"><label>Product Name *</label><input type="text" id="pf-name" placeholder="e.g. Creamy Basil Pasta"></div>
+              <div class="field-no-icon"><label>Category *</label>
+                <select id="pf-cat">
+                  <option value="">Select category…</option>
+                  <option value="vegetarian">Vegetarian</option>
+                  <option value="vegan">Vegan</option>
+                  <option value="high protein">High Protein</option>
+                  <option value="dairy-free">Dairy-Free</option>
+                  <option value="gluten-free">Gluten-Free</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-no-icon" style="margin-top:1rem"><label>Description *</label><textarea id="pf-desc" placeholder="Describe your meal kit — ingredients, flavors, cooking style…"></textarea></div>
+            <div class="form-row" style="margin-top:1rem">
+              <div class="field-no-icon"><label>Price per Serving ($) *</label><input type="number" id="pf-price" placeholder="7.99" min="0" step="0.01"></div>
+              <div class="field-no-icon"><label>Cook Time (min) *</label><input type="number" id="pf-time" placeholder="30" min="1"></div>
+            </div>
+            <div class="form-row" style="margin-top:1rem">
+              <div class="field-no-icon"><label>Calories per Serving</label><input type="number" id="pf-cal" placeholder="500"></div>
+              <div class="field-no-icon"><label>Servings</label><input type="number" id="pf-servings" placeholder="2" min="1"></div>
+            </div>
+            <div class="field-no-icon" style="margin-top:1rem"><label>Image URL (paste Unsplash link or any direct image URL)</label><input type="url" id="pf-img" placeholder="https://images.unsplash.com/photo-…"></div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="saveProduct()">Save Product</button>
+              <button class="btn-outline-cancel" onclick="vPanel('v-products',null)">Cancel</button>
+              <button class="btn-danger" id="btn-delete-prod" style="display:none" onclick="deleteProduct()">Delete Product</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vendor Profile -->
+        <div class="panel" id="v-profile">
+          <div class="profile-header">
+            <div class="profile-avatar" id="v-profile-avatar" style="background:linear-gradient(135deg,var(--terracotta),var(--gold))">VD</div>
+            <div class="profile-info">
+              <h3 id="v-profile-name-display">Vendor Demo</h3>
+              <p id="v-profile-email-display">vendor@demo.com</p>
+              <div class="profile-role-chip"><span class="chip chip-orange"><i class="fa-solid fa-store"></i> Vendor</span></div>
+            </div>
+          </div>
+          <div class="form-card">
+            <div class="form-card-title">Business Details</div>
+            <div class="form-row">
+              <div class="field-no-icon"><label>Business / Display Name</label><input type="text" id="v-pf-name"></div>
+              <div class="field-no-icon"><label>Email</label><input type="email" id="v-pf-email" readonly style="opacity:.6;cursor:not-allowed"></div>
+            </div>
+            <div class="form-row" style="margin-top:1rem">
+              <div class="field-no-icon"><label>Phone</label><input type="tel" id="v-pf-phone" placeholder="+1 555 000 0000"></div>
+              <div class="field-no-icon"><label>City / Region</label><input type="text" id="v-pf-city" placeholder="San Francisco, CA"></div>
+            </div>
+            <div class="field-no-icon" style="margin-top:1rem"><label>About Your Kitchen</label><textarea id="v-pf-bio" placeholder="Tell customers about your cooking philosophy…" style="width:100%;border:1.5px solid var(--parchment);border-radius:var(--r-sm);padding:11px 14px;font-size:.88rem;font-family:inherit;resize:vertical;min-height:80px;background:var(--cream);"></textarea></div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="saveVendorProfile()">Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART OVERLAY & DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="drawer-hdr">
+    <h3><i class="fa-solid fa-cart-shopping" style="color:var(--pine);margin-right:.5rem;font-size:1rem"></i> Your Cart</h3>
+    <button class="close-drawer" onclick="closeCart()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="drawer-body" id="cart-body"></div>
+  <div class="drawer-footer" id="cart-footer" style="display:none">
+    <div class="total-row"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+    <div class="total-row"><span>Delivery</span><span style="color:var(--pine);font-weight:600">Free</span></div>
+    <div class="total-row grand"><span>Total</span><span id="cart-grand">$0.00</span></div>
+    <button class="btn-checkout" onclick="placeOrder()"><i class="fa-solid fa-check"></i> Place Order</button>
+  </div>
+</div>
+
+<!-- TOAST STACK -->
+<div class="toast-stack" id="toast-stack"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   DATA STORE
+═══════════════════════════════════════════════════════════ */
+const DB = {
+  get: (k, fallback = null) => { try { const v = localStorage.getItem('mb_'+k); return v ? JSON.parse(v) : fallback; } catch { return fallback; } },
+  set: (k, v) => localStorage.setItem('mb_'+k, JSON.stringify(v)),
+};
+
+let users    = DB.get('users', []);
+let products = DB.get('products', defaultProducts());
+let orders   = DB.get('orders', []);
+let cart     = [];
+let currentUser = null;
+
+function save() {
+  DB.set('users', users);
+  DB.set('products', products);
+  DB.set('orders', orders);
+}
+
+function defaultProducts() {
+  return [
+    { id:'dp1', vendorId:'demo-vendor', name:'Creamy Basil Pasta', category:'vegetarian', desc:'Al dente spaghetti tossed in a rich parmesan cream with fresh basil and toasted breadcrumbs.', price:7.99, time:25, cal:620, servings:2, img:'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80' },
+    { id:'dp2', vendorId:'demo-vendor', name:'Herb-Crusted Salmon', category:'high protein', desc:'Pan-seared Atlantic salmon with roasted heritage vegetables and a lemon-herb glaze.', price:11.99, time:30, cal:480, servings:2, img:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80' },
+    { id:'dp3', vendorId:'demo-vendor', name:'Thai Coconut Curry', category:'dairy-free', desc:'Fragrant green curry with tender vegetables, jasmine rice, and fresh cilantro-lime garnish.', price:9.49, time:35, cal:550, servings:4, img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80' },
+    { id:'dp4', vendorId:'demo-vendor', name:'Lemon Garlic Chicken', category:'high protein', desc:'Juicy chicken thighs marinated with lemon, garlic, and thyme over roasted potatoes.', price:10.49, time:40, cal:520, servings:2, img:'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&q=80' },
+    { id:'dp5', vendorId:'demo-vendor', name:'Wild Mushroom Risotto', category:'vegetarian', desc:'Creamy arborio rice with wild mushrooms, parmesan, and fresh thyme. A comfort classic.', price:8.99, time:35, cal:590, servings:2, img:'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&q=80' },
+    { id:'dp6', vendorId:'demo-vendor', name:'Vegan Buddha Bowl', category:'vegan', desc:'Roasted sweet potato, quinoa, chickpeas, avocado, and tahini dressing. Wholesome & vibrant.', price:8.49, time:20, cal:420, servings:2, img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80' },
+    { id:'dp7', vendorId:'demo-vendor', name:'Gluten-Free Tacos', category:'gluten-free', desc:'Corn tortillas filled with spiced beef, fresh salsa, avocado crema, and cilantro.', price:9.99, time:25, cal:510, servings:2, img:'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80' },
+    { id:'dp8', vendorId:'demo-vendor', name:'Miso Glazed Eggplant', category:'vegan', desc:'Silky eggplant roasted in white miso glaze with sesame, scallions, and steamed jasmine rice.', price:8.29, time:30, cal:380, servings:2, img:'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=600&q=80' },
+  ];
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE ROUTING
+═══════════════════════════════════════════════════════════ */
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════════ */
+function fillDemo(role) {
+  if (role === 'customer') {
+    document.getElementById('si-email').value = 'customer@demo.com';
+    document.getElementById('si-password').value = 'demo1234';
+  } else {
+    document.getElementById('si-email').value = 'vendor@demo.com';
+    document.getElementById('si-password').value = 'demo1234';
+  }
+}
+
+function handleSignIn() {
+  const email = val('si-email');
+  const pass  = val('si-password');
+  let ok = true;
+  if (!email || !email.includes('@')) { showErr('si-email-err'); ok=false; } else hideErr('si-email-err');
+  if (!pass) { showErr('si-pass-err'); ok=false; } else hideErr('si-pass-err');
+  if (!ok) return;
+
+  // Demo accounts
+  if (email === 'customer@demo.com' && pass === 'demo1234') {
+    currentUser = { id:'demo-customer', name:'Demo Customer', email, role:'customer' };
+    loadCustomerDash(); return;
+  }
+  if (email === 'vendor@demo.com' && pass === 'demo1234') {
+    currentUser = { id:'demo-vendor', name:'Demo Vendor Kitchen', email, role:'vendor' };
+    loadVendorDash(); return;
+  }
+
+  const user = users.find(u => u.email === email && u.password === pass);
+  if (!user) { toast('Invalid email or password', 'error'); return; }
+  currentUser = user;
+  user.role === 'vendor' ? loadVendorDash() : loadCustomerDash();
+}
+
+function handleSignUp() {
+  const name  = val('su-name');
+  const email = val('su-email');
+  const pass  = val('su-password');
+  const role  = document.querySelector('input[name="su-role"]:checked').value;
+  let ok = true;
+  if (!name) { showErr('su-name-err'); ok=false; } else hideErr('su-name-err');
+  if (!email || !email.includes('@')) { showErr('su-email-err'); ok=false; } else hideErr('su-email-err');
+  if (!pass || pass.length < 6) { showErr('su-pass-err'); ok=false; } else hideErr('su-pass-err');
+  if (!ok) return;
+  if (users.find(u => u.email === email)) { toast('Email already registered', 'error'); return; }
+
+  const user = { id:'u'+Date.now(), name, email, password: pass, role };
+  users.push(user);
+  save();
+  currentUser = user;
+  toast('Account created! Welcome to MealBasket 🎉', 'success');
+  role === 'vendor' ? loadVendorDash() : loadCustomerDash();
+}
+
+function logout() {
+  currentUser = null;
+  cart = [];
+  updateCartBadge();
+  goPage('page-signin');
+  toast('Signed out successfully', 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CUSTOMER DASHBOARD
+═══════════════════════════════════════════════════════════ */
+function loadCustomerDash() {
+  const u = currentUser;
+  const initials = getInitials(u.name);
+  document.getElementById('c-avatar').textContent = initials;
+  document.getElementById('c-sb-name').textContent = u.name;
+  document.getElementById('c-topbar-title').textContent = 'Welcome back, ' + u.name.split(' ')[0] + '!';
+  document.getElementById('c-topbar-avatar').textContent = initials;
+  document.getElementById('c-profile-name-display').textContent = u.name;
+  document.getElementById('c-profile-email-display').textContent = u.email;
+  document.getElementById('c-profile-avatar').textContent = initials;
+  document.getElementById('c-pf-name').value = u.name;
+  document.getElementById('c-pf-email').value = u.email;
+
+  // activate home
+  cPanel('c-home', document.querySelector('#page-customer .sb-nav a'));
+  updateCustomerStats();
+  renderFeatured();
+  renderBrowse();
+  renderCustomerOrders();
+  goPage('page-customer');
+  toast('Signed in successfully', 'success');
+}
+
+function updateCustomerStats() {
+  const myOrders = orders.filter(o => o.userId === currentUser?.id);
+  const spent = myOrders.reduce((s,o) => s + o.total, 0);
+  setText('c-stat-orders', myOrders.length);
+  setText('c-stat-spent', '$' + spent.toFixed(2));
+  setText('c-stat-meals', products.length);
+  setText('c-stat-cart', cart.reduce((s,i) => s+i.qty, 0));
+}
+
+function cPanel(id, anchor) {
+  document.querySelectorAll('#page-customer .panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#page-customer .sb-nav a').forEach(a => a.classList.remove('active'));
+  if (anchor) anchor.classList.add('active');
+  // update topbar
+  const titles = { 'c-home':'Home', 'c-browse':'Browse Meals', 'c-orders':'My Orders', 'c-profile':'Profile' };
+  document.getElementById('c-topbar-title').textContent = titles[id] || 'Dashboard';
+}
+
+/* FEATURED */
+function renderFeatured() {
+  const grid = document.getElementById('c-featured-grid');
+  grid.innerHTML = products.slice(0,4).map(p => productCard(p)).join('');
+}
+
+/* BROWSE */
+function renderBrowse() {
+  const q   = (document.getElementById('browse-search')?.value || '').toLowerCase();
+  const cat = (document.getElementById('browse-filter')?.value || '').toLowerCase();
+  const filtered = products.filter(p => {
+    const mq = !q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+    const mc = !cat || p.category.toLowerCase().includes(cat);
+    return mq && mc;
+  });
+  document.getElementById('browse-count').textContent = filtered.length + ' meals found';
+  document.getElementById('c-browse-grid').innerHTML = filtered.length
+    ? filtered.map(p => productCard(p)).join('')
+    : `<div class="empty" style="grid-column:1/-1"><i class="fa-solid fa-plate-wheat"></i><p>No meals match your search</p></div>`;
+}
+
+function productCard(p) {
+  const imgFallback = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80';
+  return `
+  <div class="prod-card">
+    <div class="prod-img-wrap">
+      <img src="${p.img || imgFallback}" alt="${p.name}" onerror="this.src='${imgFallback}'">
+      <div class="prod-badge">${p.category}</div>
+    </div>
+    <div class="prod-body">
+      <div class="prod-name">${p.name}</div>
+      <div class="prod-desc">${p.desc}</div>
+      <div class="prod-meta">
+        <span><i class="fa-regular fa-clock"></i> ${p.time} min</span>
+        ${p.cal ? `<span><i class="fa-solid fa-fire-flame-curved"></i> ${p.cal} cal</span>` : ''}
+        ${p.servings ? `<span><i class="fa-solid fa-users"></i> ${p.servings} srv</span>` : ''}
+      </div>
+      <div class="prod-footer">
+        <div class="prod-price">$${parseFloat(p.price).toFixed(2)}</div>
+        <button class="btn-add-cart" onclick="addToCart('${p.id}')"><i class="fa-solid fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ORDERS */
+function renderCustomerOrders() {
+  const tbody = document.getElementById('c-orders-tbody');
+  const myOrders = orders.filter(o => o.userId === currentUser?.id).slice().reverse();
+  const imgFallback = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60';
+  if (!myOrders.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:3rem;color:var(--mist)">No orders yet — start browsing meals!</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = myOrders.map(o => `
+    <tr>
+      <td><img class="tbl-thumb" src="${o.img || imgFallback}" onerror="this.src='${imgFallback}'"></td>
+      <td><strong>${o.productName}</strong></td>
+      <td>${o.qty}</td>
+      <td><strong>$${parseFloat(o.total).toFixed(2)}</strong></td>
+      <td>${o.date}</td>
+      <td><span class="chip chip-green"><i class="fa-solid fa-circle-check"></i> Delivered</span></td>
+    </tr>
+  `).join('');
+}
+
+function saveCustomerProfile() {
+  if (currentUser) {
+    currentUser.name = document.getElementById('c-pf-name').value || currentUser.name;
+    const u = users.find(x => x.id === currentUser.id);
+    if (u) { u.name = currentUser.name; save(); }
+    document.getElementById('c-profile-name-display').textContent = currentUser.name;
+    document.getElementById('c-sb-name').textContent = currentUser.name;
+    const init = getInitials(currentUser.name);
+    document.getElementById('c-avatar').textContent = init;
+    document.getElementById('c-topbar-avatar').textContent = init;
+    document.getElementById('c-profile-avatar').textContent = init;
+  }
+  toast('Profile saved!', 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CART
+═══════════════════════════════════════════════════════════ */
+function addToCart(pid) {
+  const prod = products.find(p => p.id === pid);
+  if (!prod) return;
+  const ex = cart.find(i => i.id === pid);
+  if (ex) ex.qty++;
+  else cart.push({ ...prod, qty:1 });
+  updateCartBadge();
+  renderCartDrawer();
+  updateCustomerStats();
+  toast(`"${prod.name}" added to cart`, 'success');
+}
+
+function changeQty(pid, delta) {
+  const item = cart.find(i => i.id === pid);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(i => i.id !== pid);
+  updateCartBadge();
+  renderCartDrawer();
+  updateCustomerStats();
+}
+
+function updateCartBadge() {
+  const n = cart.reduce((s,i) => s+i.qty, 0);
+  const badge = document.getElementById('cart-badge');
+  if (badge) { badge.textContent = n; badge.style.display = n ? 'flex' : 'none'; }
+  const cc = document.getElementById('c-stat-cart');
+  if (cc) cc.textContent = n;
+}
+
+function openCart() {
+  renderCartDrawer();
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+function renderCartDrawer() {
+  const body   = document.getElementById('cart-body');
+  const footer = document.getElementById('cart-footer');
+  const imgFallback = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60';
+  if (!cart.length) {
+    body.innerHTML = `<div class="cart-empty"><i class="fa-solid fa-cart-shopping"></i><p>Your cart is empty.<br>Start browsing meals!</p></div>`;
+    footer.style.display = 'none';
+    return;
+  }
+  footer.style.display = 'block';
+  body.innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <img class="ci-img" src="${i.img || imgFallback}" onerror="this.src='${imgFallback}'">
+      <div class="ci-info">
+        <div class="ci-name">${i.name}</div>
+        <div class="ci-price">$${parseFloat(i.price).toFixed(2)} / serving</div>
+        <div class="ci-qty">
+          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+          <span class="qty-num">${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+        </div>
+      </div>
+      <div class="ci-total">$${(i.qty*i.price).toFixed(2)}</div>
+    </div>
+  `).join('');
+  const sub = cart.reduce((s,i) => s+i.qty*i.price, 0);
+  document.getElementById('cart-subtotal').textContent = '$' + sub.toFixed(2);
+  document.getElementById('cart-grand').textContent    = '$' + sub.toFixed(2);
+}
+
+function placeOrder() {
+  if (!cart.length) return;
+  cart.forEach(item => {
+    orders.push({
+      id: 'o'+Date.now()+Math.random().toString(36).slice(2),
+      userId: currentUser?.id,
+      vendorId: item.vendorId,
+      productId: item.id,
+      productName: item.name,
+      img: item.img,
+      qty: item.qty,
+      total: item.qty * item.price,
+      date: new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }),
+    });
+  });
+  cart = [];
+  save();
+  updateCartBadge();
+  renderCartDrawer();
+  renderCustomerOrders();
+  updateCustomerStats();
+  closeCart();
+  cPanel('c-orders', null);
+  toast('Order placed! Your meal kit is on the way 🎉', 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VENDOR DASHBOARD
+═══════════════════════════════════════════════════════════ */
+function loadVendorDash() {
+  const u = currentUser;
+  const initials = getInitials(u.name);
+  document.getElementById('v-avatar').textContent = initials;
+  document.getElementById('v-sb-name').textContent = u.name;
+  document.getElementById('v-topbar-title').textContent = 'Vendor Dashboard';
+  document.getElementById('v-topbar-avatar').textContent = initials;
+  document.getElementById('v-profile-name-display').textContent = u.name;
+  document.getElementById('v-profile-email-display').textContent = u.email;
+  document.getElementById('v-profile-avatar').textContent = initials;
+  document.getElementById('v-pf-name').value = u.name;
+  document.getElementById('v-pf-email').value = u.email;
+
+  vPanel('v-overview', document.querySelector('#page-vendor .sb-nav a'));
+  renderVendorStats();
+  renderVendorOverview();
+  renderVendorTable();
+  goPage('page-vendor');
+  toast('Signed in as Vendor', 'success');
+}
+
+function vPanel(id, anchor) {
+  document.querySelectorAll('#page-vendor .panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (anchor) {
+    document.querySelectorAll('#page-vendor .sb-nav a').forEach(a => a.classList.remove('active'));
+    anchor.classList.add('active');
+  }
+  const titles = { 'v-overview':'Overview', 'v-products':'My Products', 'v-add':'Add / Edit Product', 'v-profile':'Profile' };
+  document.getElementById('v-topbar-title').textContent = titles[id] || 'Dashboard';
+}
+
+function getVendorProducts() {
+  if (!currentUser) return [];
+  return products.filter(p => p.vendorId === currentUser.id);
+}
+
+function renderVendorStats() {
+  const vp = getVendorProducts();
+  const myOrders = orders.filter(o => vp.some(p => p.id === o.productId));
+  const revenue = myOrders.reduce((s,o) => s + o.total, 0);
+  setText('v-stat-products', vp.length);
+  setText('v-stat-revenue', '$' + revenue.toFixed(2));
+  setText('v-stat-orders', myOrders.length);
+}
+
+function renderVendorOverview() {
+  const vp = getVendorProducts();
+  const imgFallback = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60';
+  const tbody = document.getElementById('v-overview-tbody');
+  if (!vp.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--mist)">No products yet. <span style="color:var(--pine);cursor:pointer;font-weight:600" onclick="vPanel('v-add',null)">Add your first meal kit →</span></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = vp.slice(0,6).map(p => `
+    <tr>
+      <td><img class="tbl-thumb" src="${p.img || imgFallback}" onerror="this.src='${imgFallback}'"></td>
+      <td><strong>${p.name}</strong><br><span style="font-size:.74rem;color:var(--mist)">${p.desc.slice(0,45)}…</span></td>
+      <td><span class="chip chip-gray">${p.category}</span></td>
+      <td><strong>$${parseFloat(p.price).toFixed(2)}</strong></td>
+      <td><span class="chip chip-green"><i class="fa-solid fa-circle" style="font-size:.5rem"></i> Active</span></td>
+      <td><div class="tbl-actions">
+        <button class="btn-tbl-edit" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn-tbl-del" onclick="confirmDelete('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function renderVendorTable() {
+  const q   = (document.getElementById('v-search')?.value || '').toLowerCase();
+  const cat = (document.getElementById('v-filter')?.value || '').toLowerCase();
+  let vp = getVendorProducts().filter(p => {
+    const mq = !q || p.name.toLowerCase().includes(q);
+    const mc = !cat || p.category.toLowerCase().includes(cat);
+    return mq && mc;
+  });
+  const pc = document.getElementById('v-product-count');
+  if (pc) pc.textContent = vp.length + ' product' + (vp.length !== 1 ? 's' : '');
+  const imgFallback = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60';
+  const tbody = document.getElementById('v-products-tbody');
+  if (!vp.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--mist)">No products found. <span style="color:var(--pine);cursor:pointer;font-weight:600" onclick="vPanel('v-add',null);resetProdForm()">Add one →</span></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = vp.map(p => `
+    <tr>
+      <td><img class="tbl-thumb" src="${p.img || imgFallback}" onerror="this.src='${imgFallback}'"></td>
+      <td><strong>${p.name}</strong></td>
+      <td><span class="chip chip-gray">${p.category}</span></td>
+      <td>$${parseFloat(p.price).toFixed(2)}</td>
+      <td>${p.time} min</td>
+      <td>${p.cal || '—'}</td>
+      <td><div class="tbl-actions">
+        <button class="btn-tbl-edit" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn-tbl-del" onclick="confirmDelete('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function resetProdForm() {
+  document.getElementById('pf-edit-id').value = '';
+  document.getElementById('pf-name').value = '';
+  document.getElementById('pf-cat').value = '';
+  document.getElementById('pf-desc').value = '';
+  document.getElementById('pf-price').value = '';
+  document.getElementById('pf-time').value = '';
+  document.getElementById('pf-cal').value = '';
+  document.getElementById('pf-servings').value = '';
+  document.getElementById('pf-img').value = '';
+  document.getElementById('prod-form-title').textContent = 'Add New Product';
+  document.getElementById('btn-delete-prod').style.display = 'none';
+}
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('pf-edit-id').value = id;
+  document.getElementById('pf-name').value = p.name;
+  document.getElementById('pf-cat').value = p.category;
+  document.getElementById('pf-desc').value = p.desc;
+  document.getElementById('pf-price').value = p.price;
+  document.getElementById('pf-time').value = p.time;
+  document.getElementById('pf-cal').value = p.cal || '';
+  document.getElementById('pf-servings').value = p.servings || '';
+  document.getElementById('pf-img').value = p.img || '';
+  document.getElementById('prod-form-title').textContent = 'Edit Product';
+  document.getElementById('btn-delete-prod').style.display = 'inline-flex';
+  vPanel('v-add', null);
+}
+
+function saveProduct() {
+  const name     = document.getElementById('pf-name').value.trim();
+  const category = document.getElementById('pf-cat').value;
+  const desc     = document.getElementById('pf-desc').value.trim();
+  const price    = parseFloat(document.getElementById('pf-price').value);
+  const time     = parseInt(document.getElementById('pf-time').value);
+  const cal      = parseInt(document.getElementById('pf-cal').value) || null;
+  const servings = parseInt(document.getElementById('pf-servings').value) || 2;
+  const img      = document.getElementById('pf-img').value.trim();
+  const editId   = document.getElementById('pf-edit-id').value;
+
+  if (!name || !category || !desc || isNaN(price) || isNaN(time)) {
+    toast('Please fill all required fields (*)', 'error'); return;
+  }
+
+  if (editId) {
+    const idx = products.findIndex(p => p.id === editId);
+    if (idx !== -1) products[idx] = { ...products[idx], name, category, desc, price, time, cal, servings, img };
+    toast('Product updated!', 'success');
+  } else {
+    products.push({ id:'p'+Date.now(), vendorId: currentUser.id, name, category, desc, price, time, cal, servings, img });
+    toast('Product added!', 'success');
+  }
+  save();
+  renderVendorStats();
+  renderVendorOverview();
+  renderVendorTable();
+  vPanel('v-products', null);
+}
+
+function confirmDelete(id) {
+  document.getElementById('pf-edit-id').value = id;
+  if (confirm('Are you sure you want to delete this product? This cannot be undone.')) deleteProduct();
+}
+
+function deleteProduct() {
+  const id = document.getElementById('pf-edit-id').value;
+  if (!id) return;
+  products = products.filter(p => p.id !== id);
+  save();
+  renderVendorStats();
+  renderVendorOverview();
+  renderVendorTable();
+  toast('Product deleted', 'warn');
+  vPanel('v-products', null);
+}
+
+function saveVendorProfile() {
+  if (currentUser) {
+    currentUser.name = document.getElementById('v-pf-name').value || currentUser.name;
+    const u = users.find(x => x.id === currentUser.id);
+    if (u) { u.name = currentUser.name; save(); }
+    document.getElementById('v-profile-name-display').textContent = currentUser.name;
+    document.getElementById('v-sb-name').textContent = currentUser.name;
+    const init = getInitials(currentUser.name);
+    ['v-avatar','v-profile-avatar','v-topbar-avatar'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = init;
+    });
+  }
+  toast('Profile saved!', 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════ */
+function toast(msg, type='success') {
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warn:'fa-triangle-exclamation' };
+  const stack = document.getElementById('toast-stack');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}"></i> ${msg}`;
+  stack.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='.3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════════════ */
+const val = id => document.getElementById(id)?.value?.trim();
+const setText = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+const showErr = id => { const el=document.getElementById(id); if(el){el.classList.add('show');el.previousElementSibling?.querySelector('input,select')?.classList.add('error');} };
+const hideErr = id => { const el=document.getElementById(id); if(el){el.classList.remove('show');el.previousElementSibling?.querySelector('input,select')?.classList.remove('error');} };
+function getInitials(name='') {
+  return name.split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('') || '?';
+}
+
+// Enter key submit on auth pages
+document.getElementById('si-password').addEventListener('keydown', e => e.key==='Enter' && handleSignIn());
+document.getElementById('su-password').addEventListener('keydown', e => e.key==='Enter' && handleSignUp());
+</script>
+</body>
+</html>

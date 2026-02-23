@@ -1,0 +1,894 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MealBasket – Fresh · Local · Delivered</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static  'style.css' %}">
+</head>
+<body>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="home" class="page active">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="nav-logo" onclick="showPage('home')">
+      <i class="fa-solid fa-basket-shopping"></i>
+      MealBasket
+    </a>
+    <ul class="nav-links">
+      <li><a onclick="scrollToSection('how-it-works')">How It Works</a></li>
+      <li><a onclick="scrollToSection('our-meals')">Our Meals</a></li>
+      <li><a onclick="scrollToSection('pricing')">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-ghost" onclick="showPage('signin')">Log In</button>
+      <button class="btn-primary" onclick="showPage('signup')">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">FRESH • LOCAL • DELIVERED</div>
+      <h1>Cook amazing meals at home</h1>
+      <p>Pre-portioned ingredients and chef-designed recipes delivered to your door. Dinner made easy, delicious, and fun.</p>
+      <div class="hero-ctas">
+        <button class="hero-cta-primary" onclick="showPage('signup')">
+          Choose Your Meals <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <button class="hero-cta-secondary" onclick="scrollToSection('our-meals')">
+          See This Week's Menu
+        </button>
+      </div>
+      <div class="hero-note">Starting at $7.99/serving · Free shipping · Cancel anytime</div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how-it-works">
+    <div class="section-eyebrow">SIMPLE AS 1-2-3</div>
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="step-num">01</div>
+        <h3>Choose Your Recipes</h3>
+        <p>Browse our weekly menu and pick the meals you love. Filter by dietary needs, cuisine, or cook time.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon-wrap"><i class="fa-solid fa-box"></i></div>
+        <div class="step-num">02</div>
+        <h3>We Deliver Fresh</h3>
+        <p>Pre-portioned ingredients arrive at your door in insulated packaging, staying fresh and ready to cook.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon-wrap"><i class="fa-solid fa-hat-chef"></i></div>
+        <div class="step-num">03</div>
+        <h3>Cook & Enjoy</h3>
+        <p>Follow our simple step-by-step recipe cards. Most meals are ready in 30 minutes or less.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Meals -->
+  <section class="section meals-section" id="our-meals">
+    <div class="meals-header">
+      <div class="meals-header-left">
+        <div class="section-eyebrow" style="text-align:left">THIS WEEK'S MENU</div>
+        <h2 class="section-title">Featured Meals</h2>
+      </div>
+      <button class="btn-primary" onclick="showPage('signup')">View Full Menu</button>
+    </div>
+    <div class="meals-grid" id="home-meals-grid"></div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="section pricing-section" id="pricing">
+    <div class="section-eyebrow">PLANS FOR EVERYONE</div>
+    <h2 class="section-title">Choose Your Plan</h2>
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">2 recipes / week · 2 servings each</div>
+        <div class="plan-price">
+          <span class="dollar">$</span><span class="amount">7.99</span><span class="period"> / serving</span>
+        </div>
+        <button class="plan-btn plan-btn-outline" onclick="showPage('signup')">Get Started</button>
+        <ul class="plan-features">
+          <li><i class="fa-solid fa-check"></i> Choose from 20+ recipes</li>
+          <li><i class="fa-solid fa-check"></i> Free shipping</li>
+          <li><i class="fa-solid fa-check"></i> Flexible schedule</li>
+          <li><i class="fa-solid fa-check"></i> Skip or cancel anytime</li>
+        </ul>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Family</div>
+        <div class="plan-desc">3 recipes / week · 4 servings each</div>
+        <div class="plan-price">
+          <span class="dollar">$</span><span class="amount">6.49</span><span class="period"> / serving</span>
+        </div>
+        <button class="plan-btn plan-btn-filled" onclick="showPage('signup')">Get Started</button>
+        <ul class="plan-features">
+          <li><i class="fa-solid fa-check"></i> Choose from 30+ recipes</li>
+          <li><i class="fa-solid fa-check"></i> Free shipping</li>
+          <li><i class="fa-solid fa-check"></i> Family-friendly options</li>
+          <li><i class="fa-solid fa-check"></i> Priority support</li>
+          <li><i class="fa-solid fa-check"></i> Dessert add-ons</li>
+        </ul>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Gourmet</div>
+        <div class="plan-desc">4 recipes / week · 2 servings each</div>
+        <div class="plan-price">
+          <span class="dollar">$</span><span class="amount">9.99</span><span class="period"> / serving</span>
+        </div>
+        <button class="plan-btn plan-btn-outline" onclick="showPage('signup')">Get Started</button>
+        <ul class="plan-features">
+          <li><i class="fa-solid fa-check"></i> Full menu access</li>
+          <li><i class="fa-solid fa-check"></i> Free shipping</li>
+          <li><i class="fa-solid fa-check"></i> Premium ingredients</li>
+          <li><i class="fa-solid fa-check"></i> Wine pairing suggestions</li>
+          <li><i class="fa-solid fa-check"></i> Exclusive recipes</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="nav-logo footer-logo" onclick="showPage('home')">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>MealBasket</span>
+        </a>
+        <p>Fresh ingredients and chef-crafted recipes delivered weekly to your door.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Menu</h4>
+        <ul>
+          <li><a>This Week</a></li>
+          <li><a>Meal Plans</a></li>
+          <li><a>Dietary Options</a></li>
+          <li><a>Add-Ons</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a>About Us</a></li>
+          <li><a>Sustainability</a></li>
+          <li><a>Careers</a></li>
+          <li><a>Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a>Help Center</a></li>
+          <li><a>Contact Us</a></li>
+          <li><a>Delivery Areas</a></li>
+          <li><a>Gift Cards</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 MealBasket. All rights reserved.</div>
+  </footer>
+</div>
+
+<!-- ===== SIGN UP PAGE ===== -->
+<div id="signup" class="page">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <h2>Create your account</h2>
+      <p class="sub">Join thousands of home cooks today.</p>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="Jane Smith">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="jane@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Minimum 6 characters">
+      </div>
+      <div class="form-group">
+        <label>I am a…</label>
+        <div class="role-selector">
+          <div class="role-option">
+            <input type="radio" name="signup-role" id="role-customer" value="customer" checked>
+            <label class="role-label" for="role-customer">
+              <i class="fa-solid fa-user"></i>
+              <span>Customer</span>
+              <small>Browse & order meals</small>
+            </label>
+          </div>
+          <div class="role-option">
+            <input type="radio" name="signup-role" id="role-vendor" value="vendor">
+            <label class="role-label" for="role-vendor">
+              <i class="fa-solid fa-store"></i>
+              <span>Vendor</span>
+              <small>Sell your meal kits</small>
+            </label>
+          </div>
+        </div>
+      </div>
+      <button class="btn-auth" onclick="handleSignup()">Create Account</button>
+      <div class="auth-switch">
+        Already have an account? <a onclick="showPage('signin')">Sign in</a>
+        &nbsp;·&nbsp; <a onclick="showPage('home')">← Back to home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIGN IN PAGE ===== -->
+<div id="signin" class="page">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to your account.</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signin-email" placeholder="jane@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signin-password" placeholder="Your password">
+      </div>
+      <button class="btn-auth" onclick="handleSignin()">Sign In</button>
+      <div class="auth-switch">
+        Don't have an account? <a onclick="showPage('signup')">Sign up</a>
+        &nbsp;·&nbsp; <a onclick="showPage('home')">← Back to home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CUSTOMER DASHBOARD ===== -->
+<div id="customer-dashboard" class="page">
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-name" id="c-sidebar-name">Jane Smith</div>
+        <div class="user-role">Customer</div>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a class="active" onclick="showDashPanel('c-browse','this')"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
+        <li><a onclick="showDashPanel('c-orders','this')"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
+        <li><a onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">0</span></a></li>
+        <li><a onclick="showDashPanel('c-profile','this')"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+      </ul>
+      <div class="sidebar-logout">
+        <a onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <!-- Browse Panel -->
+      <div class="dash-panel active" id="c-browse">
+        <div class="dash-header">
+          <h1>Browse Meals</h1>
+          <button class="btn-primary" onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> View Cart (<span id="cart-count">0</span>)</button>
+        </div>
+        <div class="search-wrap">
+          <div class="search-input-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input class="search-input" id="customer-search" placeholder="Search meals, ingredients, cuisine…" oninput="filterProducts()">
+          </div>
+          <select class="filter-select" id="customer-filter" onchange="filterProducts()">
+            <option value="">All Categories</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="high protein">High Protein</option>
+            <option value="dairy-free">Dairy-Free</option>
+            <option value="vegan">Vegan</option>
+            <option value="gluten-free">Gluten-Free</option>
+          </select>
+        </div>
+        <div class="products-grid" id="customer-products-grid"></div>
+      </div>
+
+      <!-- Orders Panel -->
+      <div class="dash-panel" id="c-orders">
+        <div class="dash-header"><h1>My Orders</h1></div>
+        <div id="orders-list"></div>
+      </div>
+
+      <!-- Profile Panel -->
+      <div class="dash-panel" id="c-profile">
+        <div class="dash-header"><h1>My Profile</h1></div>
+        <div class="form-card">
+          <h2>Account Details</h2>
+          <div class="form-group"><label>Full Name</label><input type="text" id="c-profile-name"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="c-profile-email"></div>
+          <div class="form-group"><label>Delivery Address</label><input type="text" placeholder="123 Main St, City"></div>
+          <div class="form-actions">
+            <button class="btn-save" onclick="showToast('Profile updated!','success')">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== VENDOR DASHBOARD ===== -->
+<div id="vendor-dashboard" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-name" id="v-sidebar-name">John's Kitchen</div>
+        <div class="user-role">Vendor</div>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a class="active" onclick="showDashPanel('v-overview','this')"><i class="fa-solid fa-chart-line"></i> Overview</a></li>
+        <li><a onclick="showDashPanel('v-products','this')"><i class="fa-solid fa-list"></i> My Products</a></li>
+        <li><a onclick="showDashPanel('v-add-product','this');resetProductForm()"><i class="fa-solid fa-plus"></i> Add Product</a></li>
+        <li><a onclick="showDashPanel('v-profile','this')"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+      </ul>
+      <div class="sidebar-logout">
+        <a onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- Overview -->
+      <div class="dash-panel active" id="v-overview">
+        <div class="dash-header"><h1>Dashboard Overview</h1></div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--green-pale);color:var(--green)"><i class="fa-solid fa-box"></i></div>
+            <div class="stat-val" id="v-stat-products">0</div>
+            <div class="stat-label">Active Products</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(201,125,62,0.12);color:var(--orange)"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div class="stat-val" id="v-stat-revenue">$0</div>
+            <div class="stat-label">Total Revenue</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FEE2E2;color:#DC2626"><i class="fa-solid fa-bag-shopping"></i></div>
+            <div class="stat-val" id="v-stat-orders">0</div>
+            <div class="stat-label">Orders</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="v-overview-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Products List -->
+      <div class="dash-panel" id="v-products">
+        <div class="dash-header">
+          <h1>My Products</h1>
+          <button class="btn-primary" onclick="showDashPanel('v-add-product',null);resetProductForm()">+ Add Product</button>
+        </div>
+        <div class="search-wrap">
+          <div class="search-input-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input class="search-input" id="vendor-search" placeholder="Search your products…" oninput="renderVendorTable()">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Cook Time</th><th>Actions</th></tr></thead>
+            <tbody id="v-products-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add/Edit Product Form -->
+      <div class="dash-panel" id="v-add-product">
+        <div class="dash-header"><h1 id="product-form-title">Add New Product</h1></div>
+        <div class="form-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Product Name *</label>
+              <input type="text" id="p-name" placeholder="e.g. Creamy Basil Pasta">
+            </div>
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="p-category">
+                <option value="">Select category</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="high protein">High Protein</option>
+                <option value="dairy-free">Dairy-Free</option>
+                <option value="gluten-free">Gluten-Free</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description *</label>
+            <input type="text" id="p-desc" placeholder="Brief description of the meal">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Price per Serving ($) *</label>
+              <input type="number" id="p-price" placeholder="7.99" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label>Cook Time (minutes) *</label>
+              <input type="number" id="p-time" placeholder="30" min="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Calories per Serving</label>
+            <input type="number" id="p-cal" placeholder="500">
+          </div>
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="url" id="p-img" placeholder="https://images.unsplash.com/...">
+          </div>
+          <input type="hidden" id="p-edit-id">
+          <div class="form-actions">
+            <button class="btn-save" onclick="saveProduct()">Save Product</button>
+            <button class="btn-cancel" onclick="showDashPanel('v-products',null)">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vendor Profile -->
+      <div class="dash-panel" id="v-profile">
+        <div class="dash-header"><h1>Vendor Profile</h1></div>
+        <div class="form-card">
+          <h2>Business Details</h2>
+          <div class="form-group"><label>Business Name</label><input type="text" id="v-profile-name"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="v-profile-email"></div>
+          <div class="form-group"><label>Phone</label><input type="tel" placeholder="+1 555 000 0000"></div>
+          <div class="form-group"><label>Business Address</label><input type="text" placeholder="123 Kitchen St, City"></div>
+          <div class="form-actions">
+            <button class="btn-save" onclick="showToast('Profile updated!','success')">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCartOnOverlay(event)">
+  <div class="cart-drawer">
+    <h2>Your Cart <button onclick="closeCart()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--gray)"><i class="fa-solid fa-xmark"></i></button></h2>
+    <div id="cart-items-list"></div>
+    <div class="cart-total" id="cart-total-section" style="display:none">
+      <div class="cart-total-row"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+      <div class="cart-total-row"><span>Shipping</span><span style="color:var(--green)">Free</span></div>
+      <div class="cart-total-row bold"><span>Total</span><span id="cart-total">$0.00</span></div>
+      <button class="btn-checkout" onclick="placeOrder()">Place Order <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ===== STATE =====
+let users = JSON.parse(localStorage.getItem('mb_users') || '[]');
+let products = JSON.parse(localStorage.getItem('mb_products') || JSON.stringify([
+  { id:'p1', vendorId:'demo-vendor', name:'Creamy Basil Pasta', category:'vegetarian', desc:'Al dente spaghetti tossed in a rich parmesan cream with fresh basil and toasted breadcrumbs.', price:7.99, time:25, cal:620, img:'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80' },
+  { id:'p2', vendorId:'demo-vendor', name:'Herb-Crusted Salmon', category:'high protein', desc:'Pan-seared Atlantic salmon with roasted heritage vegetables and a lemon-herb glaze.', price:11.99, time:30, cal:480, img:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80' },
+  { id:'p3', vendorId:'demo-vendor', name:'Thai Coconut Curry', category:'dairy-free', desc:'Fragrant green curry with tender vegetables, jasmine rice, and fresh cilantro-lime garnish.', price:9.49, time:35, cal:550, img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80' },
+  { id:'p4', vendorId:'demo-vendor', name:'Lemon Garlic Chicken', category:'high protein', desc:'Juicy chicken thighs marinated with lemon, garlic, and fresh thyme served over roasted potatoes.', price:10.49, time:40, cal:520, img:'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&q=80' },
+  { id:'p5', vendorId:'demo-vendor', name:'Mushroom Risotto', category:'vegetarian', desc:'Creamy arborio rice with wild mushrooms, parmesan, and fresh thyme. A comfort classic.', price:8.99, time:35, cal:590, img:'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&q=80' },
+  { id:'p6', vendorId:'demo-vendor', name:'Vegan Buddha Bowl', category:'vegan', desc:'Roasted sweet potato, quinoa, chickpeas, avocado, and tahini dressing.', price:8.49, time:20, cal:420, img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80' },
+]));
+let cart = [];
+let orders = JSON.parse(localStorage.getItem('mb_orders') || '[]');
+let currentUser = null;
+
+function saveData() {
+  localStorage.setItem('mb_users', JSON.stringify(users));
+  localStorage.setItem('mb_products', JSON.stringify(products));
+  localStorage.setItem('mb_orders', JSON.stringify(orders));
+}
+
+// ===== PAGE ROUTING =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior:'smooth' });
+}
+
+// ===== AUTH =====
+function handleSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const role = document.querySelector('input[name="signup-role"]:checked').value;
+  if (!name || !email || !password) return showToast('Please fill all fields','error');
+  if (password.length < 6) return showToast('Password must be 6+ characters','error');
+  if (users.find(u => u.email === email)) return showToast('Email already registered','error');
+  const user = { id:'u'+Date.now(), name, email, password, role };
+  users.push(user);
+  saveData();
+  currentUser = user;
+  showToast('Account created! Welcome 🎉','success');
+  goToDashboard(user);
+}
+
+function handleSignin() {
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value;
+  const user = users.find(u => u.email === email && u.password === password);
+  // demo accounts
+  if (!user) {
+    if (email === 'customer@demo.com' && password === 'demo123') {
+      currentUser = { id:'demo-customer', name:'Demo Customer', email, role:'customer' };
+      showToast('Welcome back!','success');
+      return goToDashboard(currentUser);
+    }
+    if (email === 'vendor@demo.com' && password === 'demo123') {
+      currentUser = { id:'demo-vendor', name:'Demo Vendor Kitchen', email, role:'vendor' };
+      showToast('Welcome back!','success');
+      return goToDashboard(currentUser);
+    }
+    return showToast('Invalid email or password','error');
+  }
+  currentUser = user;
+  showToast('Welcome back!','success');
+  goToDashboard(user);
+}
+
+function goToDashboard(user) {
+  if (user.role === 'customer') {
+    document.getElementById('c-sidebar-name').textContent = user.name;
+    document.getElementById('c-profile-name').value = user.name;
+    document.getElementById('c-profile-email').value = user.email;
+    renderCustomerProducts();
+    renderOrders();
+    showPage('customer-dashboard');
+    showDashPanel('c-browse', null);
+  } else {
+    document.getElementById('v-sidebar-name').textContent = user.name;
+    document.getElementById('v-profile-name').value = user.name;
+    document.getElementById('v-profile-email').value = user.email;
+    renderVendorTable();
+    updateVendorStats();
+    showPage('vendor-dashboard');
+    showDashPanel('v-overview', null);
+  }
+}
+
+function handleLogout() {
+  currentUser = null;
+  cart = [];
+  updateCartUI();
+  showPage('home');
+  showToast('Signed out','success');
+}
+
+// ===== DASHBOARD PANELS =====
+function showDashPanel(panelId, anchor) {
+  const page = document.getElementById(panelId).closest('.page');
+  page.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+  if (anchor) {
+    page.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    if (typeof anchor === 'object') anchor.classList.add('active');
+  }
+  // sync sidebar
+  page.querySelectorAll('.sidebar-nav a').forEach(a => {
+    if (a.getAttribute('onclick') && a.getAttribute('onclick').includes(panelId)) a.classList.add('active');
+    else a.classList.remove('active');
+  });
+}
+
+// ===== PRODUCTS =====
+function getVendorProducts() {
+  if (!currentUser) return products;
+  return products.filter(p => p.vendorId === currentUser.id);
+}
+
+function renderCustomerProducts(list) {
+  const grid = document.getElementById('customer-products-grid');
+  const items = list || products;
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-plate-wheat"></i><p>No meals found</p></div>`;
+    return;
+  }
+  grid.innerHTML = items.map(p => `
+    <div class="product-card">
+      <img src="${p.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'">
+      <div class="product-body">
+        <span class="meal-badge"><i class="fa-solid fa-leaf"></i>${p.category}</span>
+        <h3>${p.name}</h3>
+        <p class="desc">${p.desc}</p>
+        <div class="product-meta">
+          <span class="product-price">$${parseFloat(p.price).toFixed(2)}</span>
+          <span class="product-time"><i class="fa-solid fa-clock"></i> ${p.time} min ${p.cal ? '· '+p.cal+' cal' : ''}</span>
+        </div>
+        <button class="btn-add" onclick="addToCart('${p.id}')"><i class="fa-solid fa-plus"></i> Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts() {
+  const q = document.getElementById('customer-search').value.toLowerCase();
+  const cat = document.getElementById('customer-filter').value.toLowerCase();
+  const filtered = products.filter(p => {
+    const matchQ = !q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+    const matchCat = !cat || p.category.toLowerCase().includes(cat);
+    return matchQ && matchCat;
+  });
+  renderCustomerProducts(filtered);
+}
+
+// Vendor products table
+function renderVendorTable() {
+  const q = (document.getElementById('vendor-search')?.value || '').toLowerCase();
+  const vp = getVendorProducts().filter(p => !q || p.name.toLowerCase().includes(q));
+  const tbody = document.getElementById('v-products-table');
+  const tbodyOv = document.getElementById('v-overview-table');
+
+  const rows = vp.length ? vp.map(p => `
+    <tr>
+      <td><img class="tbl-img" src="${p.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=60'}" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=60'"></td>
+      <td><strong>${p.name}</strong></td>
+      <td><span class="badge badge-orange">${p.category}</span></td>
+      <td><strong>$${parseFloat(p.price).toFixed(2)}</strong></td>
+      <td>${p.time} min</td>
+      <td>
+        <button class="btn-edit" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn-delete" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:2rem">No products yet. Add your first meal kit!</td></tr>`;
+
+  if (tbody) tbody.innerHTML = rows;
+  if (tbodyOv) tbodyOv.innerHTML = vp.length ? vp.slice(0,5).map(p => `
+    <tr>
+      <td><strong>${p.name}</strong></td>
+      <td><span class="badge badge-orange">${p.category}</span></td>
+      <td>$${parseFloat(p.price).toFixed(2)}</td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td>
+        <button class="btn-edit" onclick="editProduct('${p.id}');showDashPanel('v-add-product',null)"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn-delete" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem">No products yet</td></tr>`;
+}
+
+function updateVendorStats() {
+  const vp = getVendorProducts();
+  document.getElementById('v-stat-products').textContent = vp.length;
+  const rev = orders.filter(o => vp.some(p => p.id === o.productId)).reduce((s,o) => s + o.total, 0);
+  document.getElementById('v-stat-revenue').textContent = '$' + rev.toFixed(2);
+  document.getElementById('v-stat-orders').textContent = orders.filter(o => vp.some(p => p.id === o.productId)).length;
+}
+
+function resetProductForm() {
+  document.getElementById('p-name').value = '';
+  document.getElementById('p-category').value = '';
+  document.getElementById('p-desc').value = '';
+  document.getElementById('p-price').value = '';
+  document.getElementById('p-time').value = '';
+  document.getElementById('p-cal').value = '';
+  document.getElementById('p-img').value = '';
+  document.getElementById('p-edit-id').value = '';
+  document.getElementById('product-form-title').textContent = 'Add New Product';
+}
+
+function saveProduct() {
+  const name = document.getElementById('p-name').value.trim();
+  const category = document.getElementById('p-category').value;
+  const desc = document.getElementById('p-desc').value.trim();
+  const price = parseFloat(document.getElementById('p-price').value);
+  const time = parseInt(document.getElementById('p-time').value);
+  const cal = parseInt(document.getElementById('p-cal').value) || null;
+  const img = document.getElementById('p-img').value.trim();
+  const editId = document.getElementById('p-edit-id').value;
+  if (!name || !category || !desc || !price || !time) return showToast('Please fill required fields','error');
+  if (editId) {
+    const idx = products.findIndex(p => p.id === editId);
+    if (idx !== -1) products[idx] = { ...products[idx], name, category, desc, price, time, cal, img };
+    showToast('Product updated!','success');
+  } else {
+    products.push({ id:'p'+Date.now(), vendorId: currentUser.id, name, category, desc, price, time, cal, img });
+    showToast('Product added!','success');
+  }
+  saveData();
+  renderVendorTable();
+  updateVendorStats();
+  showDashPanel('v-products', null);
+}
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('p-name').value = p.name;
+  document.getElementById('p-category').value = p.category;
+  document.getElementById('p-desc').value = p.desc;
+  document.getElementById('p-price').value = p.price;
+  document.getElementById('p-time').value = p.time;
+  document.getElementById('p-cal').value = p.cal || '';
+  document.getElementById('p-img').value = p.img || '';
+  document.getElementById('p-edit-id').value = p.id;
+  document.getElementById('product-form-title').textContent = 'Edit Product';
+  showDashPanel('v-add-product', null);
+}
+
+function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  products = products.filter(p => p.id !== id);
+  saveData();
+  renderVendorTable();
+  updateVendorStats();
+  showToast('Product deleted','success');
+}
+
+// ===== CART =====
+function addToCart(productId) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+  const existing = cart.find(i => i.id === productId);
+  if (existing) existing.qty++;
+  else cart.push({ ...product, qty: 1 });
+  updateCartUI();
+  showToast(`${product.name} added to cart!`, 'success');
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s,i) => s + i.qty, 0);
+  document.getElementById('cart-count').textContent = total;
+  document.getElementById('cart-count-badge').textContent = total;
+
+  const listEl = document.getElementById('cart-items-list');
+  const totalSec = document.getElementById('cart-total-section');
+  if (!cart.length) {
+    listEl.innerHTML = `<div class="empty-state"><i class="fa-solid fa-cart-shopping"></i><p>Your cart is empty</p></div>`;
+    totalSec.style.display = 'none';
+    return;
+  }
+  totalSec.style.display = 'block';
+  listEl.innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <img src="${i.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'}" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'">
+      <div class="cart-item-info">
+        <h4>${i.name}</h4>
+        <p>$${parseFloat(i.price).toFixed(2)} / serving</p>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+          <span>${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+        </div>
+      </div>
+      <strong>$${(i.qty * i.price).toFixed(2)}</strong>
+    </div>
+  `).join('');
+  const subtotal = cart.reduce((s,i) => s + i.qty * i.price, 0);
+  document.getElementById('cart-subtotal').textContent = '$' + subtotal.toFixed(2);
+  document.getElementById('cart-total').textContent = '$' + subtotal.toFixed(2);
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+  updateCartUI();
+}
+
+function openCart() { document.getElementById('cart-overlay').classList.add('open'); }
+function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); }
+function closeCartOnOverlay(e) { if (e.target === document.getElementById('cart-overlay')) closeCart(); }
+
+function placeOrder() {
+  if (!cart.length) return;
+  const total = cart.reduce((s,i) => s + i.qty * i.price, 0);
+  cart.forEach(item => {
+    orders.push({
+      id: 'o'+Date.now()+Math.random(),
+      userId: currentUser?.id,
+      productId: item.id,
+      productName: item.name,
+      productImg: item.img,
+      qty: item.qty,
+      total: item.qty * item.price,
+      date: new Date().toLocaleDateString()
+    });
+  });
+  cart = [];
+  saveData();
+  updateCartUI();
+  closeCart();
+  renderOrders();
+  showToast('Order placed! 🎉','success');
+  showDashPanel('c-orders', null);
+}
+
+// ===== ORDERS =====
+function renderOrders() {
+  const list = document.getElementById('orders-list');
+  if (!list) return;
+  const myOrders = orders.filter(o => o.userId === currentUser?.id);
+  if (!myOrders.length) {
+    list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-bag-shopping"></i><p>No orders yet. Start browsing meals!</p></div>`;
+    return;
+  }
+  list.innerHTML = myOrders.slice().reverse().map(o => `
+    <div class="order-card">
+      <img src="${o.productImg || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'}" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'">
+      <div class="order-info">
+        <h4>${o.productName}</h4>
+        <p>Qty: ${o.qty} · ${o.date}</p>
+      </div>
+      <span class="order-total">$${parseFloat(o.total).toFixed(2)}</span>
+    </div>
+  `).join('');
+}
+
+// ===== TOAST =====
+function showToast(msg, type='success') {
+  const wrap = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-xmark'}"></i> ${msg}`;
+  wrap.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ===== HOME MEALS GRID =====
+function renderHomeMeals() {
+  const grid = document.getElementById('home-meals-grid');
+  const featured = products.slice(0,3);
+  grid.innerHTML = featured.map(p => `
+    <div class="meal-card">
+      <img class="meal-img" src="${p.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'">
+      <div class="meal-body">
+        <span class="meal-badge"><i class="fa-solid fa-leaf"></i>${p.category}</span>
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="meal-meta">
+          <span><i class="fa-solid fa-clock"></i> ${p.time} min</span>
+          ${p.cal ? `<span><i class="fa-solid fa-fire"></i> ${p.cal} cal</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== INIT =====
+renderHomeMeals();
+</script>
+</body>
+</html>
