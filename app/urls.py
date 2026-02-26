@@ -6,8 +6,8 @@ urlpatterns = [
     path('auth', auth, name='auth'),
     path('', test, name='home'),
 
-    path('signup_view/', signup_view, name='signup'),
-    path('signin_view/', signin_view, name='signin'),
+    path('signup', signup_view, name='signup'),
+    path('signin/', signin_view, name='signin'),
     path('logout', logout_view, name='logout'),
 
     path('customer/dashboard', customer_dashboard, name='customer_dashboard'),
@@ -15,6 +15,13 @@ urlpatterns = [
 
     path('customer/update/profile', update_customer_profile, name='update_customer_profile'),
     path('customer/add-to-cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
+    path('customer/cart', view_cart, name='view_cart'),
+    path('customer/cart/update/<int:item_id>/', update_cart_item, name='update_cart_item'),
+    path('customer/cart/remove/<int:item_id>/', remove_cart_item, name='remove_cart_item'),
+
+    path('customer/checkout', checkout, name='checkout'),
+    path('customer/payment/success', payment_success, name='payment_success'),
+    path('customer/payment/cancel', payment_fail, name='payment_fail'),
 
     path('vendor/save-product', save_product, name='save_product'),
     path('vendor/product/list', my_products, name='vendor_product_list'),

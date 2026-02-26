@@ -1,0 +1,165 @@
+{% load static %}
+{% load cart_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Cart – MealBasket</title>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  /* Main layout */
+  .main-content {
+    margin-left: 260px; /* match sidebar width */
+    padding: 2rem;
+    min-height: 100vh;
+    background: var(--cream);
+  }
+
+  .page-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    max-width: 900px;
+    margin: auto;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #333;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 1rem 0;
+  }
+
+  .cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 1rem;
+  }
+
+  .cart-item-info {
+    flex: 1;
+  }
+
+  .cart-item-actions button {
+    padding: 0.3rem 0.7rem;
+    margin: 0 0.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #f3f4f6;
+  }
+
+  .cart-item-actions button:hover {
+    background: #e5e7eb;
+  }
+
+  .cart-summary {
+    margin-top: 2rem;
+    text-align: right;
+  }
+
+  .cart-summary h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .btn-checkout {
+    background:var(--green); color:var(--white); border:none;
+    padding:10px 22px; border-radius:50px; font-family:'DM Sans',sans-serif;
+    font-weight:600; font-size:0.92rem; cursor:pointer; transition:all .2s;
+    text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+  }
+
+  .btn-checkout:hover {
+    background:var(--dark); transform:translateY(-1px);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <span>MealBasket</span>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-name">{{ profile.user.username }}</div>
+      <div class="user-role">Customer</div>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="{% url 'customer_dashboard' %}"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
+      <li><a href=""><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
+      <li><a class="active" href="{% url 'view_cart' %}"><i class="fa-solid fa-cart-shopping"></i> Cart 
+        <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">
+          {{ cart_items.count }}
+        </span>
+      </a></li>
+      <li><a href="{% url 'update_customer_profile' %}"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+    </ul>
+    <div class="sidebar-logout">
+      <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-card">
+      <h1>My Cart</h1>
+
+      {% if cart_items %}
+        {% for item in cart_items %}
+          <div class="cart-item">
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            <div class="cart-item-info">
+              <h4>{{ item.product.name }}</h4>
+              <p>Price: Rs. {{ item.product.price }}</p>
+              <p>Quantity: {{ item.quantity }}</p>
+            </div>
+            <div class="cart-item-actions">
+              <a href="{% url 'update_cart_item' item.id %}?action=increase"><button>+</button></a>
+              <a href="{% url 'update_cart_item' item.id %}?action=decrease"><button>-</button></a>
+              <a href="{% url 'remove_cart_item' item.id %}"><button>Remove</button></a>
+            </div>
+          </div>
+        {% endfor %}
+
+        <div class="cart-summary">
+          {% comment %} Calculate total {% endcomment %}
+          {% with total=0 %}
+                {% for item in cart_items %}
+                    {% with line_total=item.quantity|multiply:item.product.price %}
+                        {% with total=total|add:line_total %}{% endwith %}
+                    {% endwith %}
+                {% endfor %}
+                <h3>Total: Rs. {{ total }}</h3>
+            {% endwith %}
+          <a href="{% url 'checkout' %}" class="btn-checkout">Proceed to Checkout</a>
+        </div>
+
+      {% else %}
+        <p>Your cart is empty.</p>
+      {% endif %}
+
+    </div>
+  </main>
+
+</div>
+
+</body>
+</html>

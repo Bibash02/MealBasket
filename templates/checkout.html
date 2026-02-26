@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout – MealBasket</title>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<style>
+    .btn-back {
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        color: #333;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+    .btn-back:hover {
+        background: #e5e7eb;
+    }
+
+    .page-card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 800px;
+        margin: 2rem auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    table th, table td {
+        padding: 0.5rem 1rem;
+        text-align: left;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-weight: 500;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .form-group input::placeholder {
+        color: #999;
+    }
+
+    .btn-checkout {
+        background: #22c55e;
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-checkout:hover {
+        background: #16a34a;
+    }
+</style>
+</head>
+<body>
+
+<div class="main-content">
+    <a href="{% url 'view_cart' %}" class="btn-back">&larr; Back to Cart</a>
+    <div class="page-card">
+        <h1>Checkout</h1>
+
+        {% if cart_items %}
+        <h2>Order Summary</h2>
+        <table style="width:100%; border-collapse: collapse; margin-bottom: 2rem;">
+            <tr style="border-bottom: 1px solid #ccc;">
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+            {% for item in cart_items %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>Rs. {{ item.product.price }}</td>
+                <td>Rs. {{ item.line_total }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" style="text-align:right;"><strong>Total:</strong></td>
+                <td><strong>Rs. {{ total }}</strong></td>
+            </tr>
+        </table>
+
+        <h2>Shipping Details</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="full_name">Full Name</label>
+                <input type="text" name="full_name" id="full_name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" name="phone" id="phone" placeholder="Enter you phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" name="address" id="address" placeholder="Enter your full address" required>
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" name="city" id="city" placeholder="Enter your city name" required>
+            </div>
+            <div class="form-group">
+                <label for="payment_type">Payment Method</label>
+                <select name="payment_type" id="payment_type" required>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="esewa">eSewa</option>
+                </select>
+            </div>
+
+            <input type="hidden" name="amount" value="{{ total }}">
+
+            <button type="submit" class="btn-checkout" style="margin-top:20px;">Place Order</button>
+        </form>
+
+        {% else %}
+            <p>Your cart is empty!</p>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

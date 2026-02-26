@@ -90,29 +90,24 @@
 
 <div class="dashboard-layout">
 
-  <!-- ================= SIDEBAR ================= -->
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-logo">
         <i class="fa-solid fa-basket-shopping"></i>
         <span>MealBasket</span>
     </div>
-
     <div class="sidebar-user">
-      <div class="user-name">{{ request.user.username }}</div>
-      <div class="user-role">Vendor</div>
+      <div class="user-name">{{ profile.user.username }}</div>
+      <div class="user-role">Customer</div>
     </div>
-
     <ul class="sidebar-nav">
-      <li><a href="{% url 'vendor_dashboard' %}"><i class="fa-solid fa-chart-line"></i> Overview</a></li>
-      <li><a href="{% url 'vendor_product_list' %}"><i class="fa-solid fa-list"></i> My Products</a></li>
-      <li><a href="{% url 'add_product' %}"><i class="fa-solid fa-plus"></i> Add Product</a></li>
-      <li class="active"><a href="{% url 'update_vendor_profile' %}"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+      <li><a  href="{% url 'customer_dashboard' %}" class="active"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
+      <li><a onclick="showDashPanel('c-orders')"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
+      <li><a onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">0</span></a></li>
+      <li><a onclick="showDashPanel('c-profile')"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
     </ul>
-
     <div class="sidebar-logout">
-      <a href="{% url 'logout' %}">
-        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-      </a>
+      <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
     </div>
   </aside>
 
@@ -141,7 +136,7 @@
 
         <div class="form-actions">
           <button type="submit" class="btn-save">Update Profile</button>
-          <a href="{% url 'vendor_dashboard' %}" class="btn">Back to Dashboard</a>
+          <a href="{% url 'customer_dashboard' %}" class="btn">Back to Dashboard</a>
         </div>
 
       </form>

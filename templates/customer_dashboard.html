@@ -24,10 +24,17 @@
       <div class="user-role">Customer</div>
     </div>
     <ul class="sidebar-nav">
-      <li><a onclick="showDashPanel('c-browse')" class="active"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
+      <li><a href="{% url 'customer_dashboard' %}" class="active"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
       <li><a onclick="showDashPanel('c-orders')"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
-      <li><a onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">0</span></a></li>
-      <li><a onclick="showDashPanel('c-profile')"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+      <li>
+        <a href="{% url 'view_cart' %}">
+          <i class="fa-solid fa-cart-shopping"></i> Cart
+          <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">
+            {{ cart_count }}
+          </span>
+        </a>
+      </li>
+      <li><a href="{% url 'update_customer_profile' %}"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
     </ul>
     <div class="sidebar-logout">
       <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
@@ -41,10 +48,12 @@
     <div class="dash-panel active" id="c-browse">
       <div class="dash-header">
         <h1>Browse Meals</h1>
-        <button class="btn-primary" onclick="openCart()">
-          <i class="fa-solid fa-cart-shopping"></i> View Cart (<span id="cart-count">0</span>)
-        </button>
-      </div>
+
+        <a href="{% url 'view_cart' %}" class="btn-primary cart-btn">
+            <i class="fa-solid fa-cart-shopping"></i> 
+            View Cart (<span id="cart-count">{{ cart_count }}</span>)
+        </a>
+    </div>
       <div class="search-wrap">
         <div class="search-input-wrap">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -60,72 +69,51 @@
       <!-- Products Grid -->
       <div class="products-grid">
         {% for product in products %}
-        <div class="product-card">
-          {% if product.image %}
-            <img src="{{ product.image.url }}" class="product-img">
-          {% endif %}
-          <div class="product-info">
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description|truncatewords:12 }}</p>
-            <div class="product-bottom">
-              <span class="price">Rs. {{ product.price }}</span>
+          <div class="product-card">
 
-              <form method="POST" action="{% url 'add_to_cart' product.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-primary">
-                  <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                </button>
-              </form>
+            <!-- Product Image -->
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+            {% else %}
+              <img src="{% static 'images/no-image.png' %}" class="product-img" alt="No Image">
+            {% endif %}
 
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+
+              <p>{{ product.description|truncatewords:12 }}</p>
+
+              <!-- Stock Display -->
+              {% if product.stock > 0 %}
+                <small class="stock available">In Stock ({{ product.stock }})</small>
+              {% else %}
+                <small class="stock out">Out of Stock</small>
+              {% endif %}
+
+              <div class="product-bottom">
+                <span class="price">Rs. {{ product.price }}</span>
+
+                {% if product.stock > 0 %}
+                  <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-primary">
+                      <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                    </button>
+                  </form>
+                {% else %}
+                  <button class="btn-disabled" disabled>
+                    Out of Stock
+                  </button>
+                {% endif %}
+
+              </div>
             </div>
           </div>
-        </div>
         {% empty %}
           <p>No meals available.</p>
         {% endfor %}
       </div>
     </div>
-
-    <!-- ===== ORDERS PANEL ===== -->
-    <div class="dash-panel" id="c-orders">
-      <div class="dash-header"><h1>My Orders</h1></div>
-      <div id="orders-list"></div>
-    </div>
-
-    <!-- ===== PROFILE PANEL ===== -->
-    <section id="profile" class="dash-panel">
-      <div class="dash-header">
-        <h1>My Profile</h1>
-      </div>
-
-      <div class="form-card">
-        <form method="POST" action="{% url 'update_customer_profile' %}">
-          {% csrf_token %}
-
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" name="full_name" value="{{ profile.user.first_name }}">
-          </div>
-
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" value="{{ profile.user.email }}" disabled>
-          </div>
-
-          <div class="form-group">
-            <label>Delivery Address</label>
-            <input type="text" name="address" value="{{ profile.address }}">
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn-save">Save Changes</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-  </main>
-</div>
 
 <!-- ===== CART DRAWER ===== -->
 <div class="cart-overlay" id="cart-overlay" onclick="closeCartOnOverlay(event)">
@@ -192,64 +180,6 @@ function renderProducts(list) {
   `).join('');
 }
 
-function filterProducts() {
-  const q   = document.getElementById('customer-search').value.toLowerCase();
-  const cat = document.getElementById('customer-filter').value.toLowerCase();
-  const filtered = getProducts().filter(p => {
-    const matchQ   = !q   || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
-    const matchCat = !cat || p.category.toLowerCase().includes(cat);
-    return matchQ && matchCat;
-  });
-  renderProducts(filtered);
-}
-
-// ===== CART =====
-function addToCart(productId) {
-  const products = getProducts();
-  const product = products.find(p => p.id === productId);
-  if (!product) return;
-  const existing = cart.find(i => i.id === productId);
-  if (existing) existing.qty++;
-  else cart.push({ ...product, qty: 1 });
-  updateCartUI();
-  showToast(`${product.name} added to cart!`, 'success');
-}
-
-function updateCartUI() {
-  const total = cart.reduce((s, i) => s + i.qty, 0);
-  document.getElementById('cart-count').textContent = total;
-  document.getElementById('cart-count-badge').textContent = total;
-
-  const listEl    = document.getElementById('cart-items-list');
-  const totalSec  = document.getElementById('cart-total-section');
-
-  if (!cart.length) {
-    listEl.innerHTML = `<div class="empty-state"><i class="fa-solid fa-cart-shopping"></i><p>Your cart is empty</p></div>`;
-    totalSec.style.display = 'none';
-    return;
-  }
-  totalSec.style.display = 'block';
-  listEl.innerHTML = cart.map(i => `
-    <div class="cart-item">
-      <img src="${i.img || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'}"
-           onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'">
-      <div class="cart-item-info">
-        <h4>${i.name}</h4>
-        <p>$${parseFloat(i.price).toFixed(2)} / serving</p>
-        <div class="cart-item-qty">
-          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
-          <span>${i.qty}</span>
-          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
-        </div>
-      </div>
-      <strong>$${(i.qty * i.price).toFixed(2)}</strong>
-    </div>
-  `).join('');
-
-  const subtotal = cart.reduce((s, i) => s + i.qty * i.price, 0);
-  document.getElementById('cart-subtotal').textContent   = '$' + subtotal.toFixed(2);
-  document.getElementById('cart-total-val').textContent  = '$' + subtotal.toFixed(2);
-}
 
 function changeQty(id, delta) {
   const item = cart.find(i => i.id === id);
@@ -263,61 +193,6 @@ function openCart()  { document.getElementById('cart-overlay').classList.add('op
 function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); }
 function closeCartOnOverlay(e) { if (e.target === document.getElementById('cart-overlay')) closeCart(); }
 
-function placeOrder() {
-  if (!cart.length) return;
-  const orders = getOrders();
-  cart.forEach(item => {
-    orders.push({
-      id: 'o' + Date.now() + Math.random(),
-      userId: currentUser.id,
-      productId: item.id,
-      productName: item.name,
-      productImg: item.img,
-      qty: item.qty,
-      total: item.qty * item.price,
-      date: new Date().toLocaleDateString()
-    });
-  });
-  saveOrders(orders);
-  cart = [];
-  updateCartUI();
-  closeCart();
-  renderOrders();
-  showToast('Order placed! 🎉', 'success');
-  showDashPanel('c-orders');
-}
-
-// ===== ORDERS =====
-function renderOrders() {
-  const list = document.getElementById('orders-list');
-  const orders = getOrders().filter(o => o.userId === currentUser?.id);
-  if (!orders.length) {
-    list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-bag-shopping"></i><p>No orders yet. Start browsing meals!</p></div>`;
-    return;
-  }
-  list.innerHTML = orders.slice().reverse().map(o => `
-    <div class="order-card">
-      <img src="${o.productImg || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'}"
-           onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=60'">
-      <div class="order-info">
-        <h4>${o.productName}</h4>
-        <p>Qty: ${o.qty} · ${o.date}</p>
-      </div>
-      <span class="order-total">$${parseFloat(o.total).toFixed(2)}</span>
-    </div>
-  `).join('');
-}
-
-// ===== PROFILE =====
-function saveProfile() {
-  showToast('Profile updated!', 'success');
-}
-
-// ===== LOGOUT =====
-function handleLogout() {
-  clearCurrentUser();
-  window.location.href = 'index.html';
-}
 </script>
 </body>
 </html>

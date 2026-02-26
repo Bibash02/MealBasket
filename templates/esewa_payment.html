@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting to eSewa</title>
+</head>
+<body>
+<h2>Please wait, redirecting to eSewa...</h2>
+
+<form id="esewaForm" 
+      action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" 
+      method="POST">
+
+    <input type="hidden" name="amt" value="{{ amt }}">
+    <input type="hidden" name="pid" value="{{ pid }}">
+    <input type="hidden" name="scd" value="{{ scd }}">
+    <input type="hidden" name="su" value="{{ su }}">
+    <input type="hidden" name="fu" value="{{ fu }}">
+
+    <input type="hidden" name="signed_field_names" value="amt,pid,scd">
+    <input type="hidden" name="signature" value="{{ signature }}">
+</form>
+
+<script>
+    document.getElementById("esewaForm").submit();
+</script>
+</body>
+</html>

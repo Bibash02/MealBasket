@@ -88,7 +88,7 @@ img.product-thumb { width: 60px; height: 60px; object-fit: cover; border-radius:
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Image</th><th>Product</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr>
+          <tr><th>Image</th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
         </thead>
         <tbody>
           {% for product in products %}
@@ -103,6 +103,7 @@ img.product-thumb { width: 60px; height: 60px; object-fit: cover; border-radius:
             <td><strong>{{ product.name }}</strong></td>
             <td>{{ product.category.name }}</td>
             <td>Rs. {{ product.price }}</td>
+            <td>{{ product.stock }}</td>
             <td>{{ product.cook_time }} min</td>
             <td style="display:flex;gap:0.5rem;">
 

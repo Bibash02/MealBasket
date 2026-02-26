@@ -8,87 +8,20 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  /* Adjust content area */
-  .main-content {
-    margin-left: 260px; /* same as dashboard sidebar width */
-    padding: 2rem;
-    min-height: 100vh;
-    background: #f9f9f9;
-  }
-
-  .page-card {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.05);
-    max-width: 700px;
-    margin: auto;
-  }
-
-  h1 {
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-    color: #333;
-  }
-
-  .form-group {
-    margin-bottom: 1.2rem;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-
-  .form-actions {
-    margin-top: 1.5rem;
-  }
-
-  .btn-save {
-    padding: 0.7rem 1.5rem;
-    background: #22c55e;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-
-  .btn-save:hover {
-    background: #16a34a;
-  }
-
-  .btn {
-    padding: 0.7rem 1.5rem;
-    background: #f3f4f6;
-    color: #333;
-    text-decoration: none;
-    border-radius: 6px;
-    margin-left: 0.5rem;
-  }
-
-  .btn:hover {
-    background: #e5e7eb;
-  }
+  .main-content { margin-left: 260px; padding: 2rem; min-height: 100vh; background: #f9f9f9; }
+  .page-card { background: #fff; padding: 2rem; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.05); max-width: 700px; margin: auto; }
+  h1 { margin-bottom: 1.5rem; font-size: 1.8rem; color: #333; }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-actions { margin-top: 1.5rem; }
+  .btn-save { padding: 0.7rem 1.5rem; background: #22c55e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+  .btn-save:hover { background: #16a34a; }
+  .btn { padding: 0.7rem 1.5rem; background: #f3f4f6; color: #333; text-decoration: none; border-radius: 6px; margin-left: 0.5rem; }
+  .btn:hover { background: #e5e7eb; }
 </style>
 </head>
-
 <body>
 
 <div class="dashboard-layout">
@@ -96,22 +29,19 @@
   <!-- ================= SIDEBAR ================= -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-        <i class="fa-solid fa-basket-shopping"></i>
-        <span>MealBasket</span>
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span>MealBasket</span>
     </div>
-
     <div class="sidebar-user">
       <div class="user-name">{{ request.user.username }}</div>
       <div class="user-role">Vendor</div>
     </div>
-
     <ul class="sidebar-nav">
       <li><a href="{% url 'vendor_dashboard' %}"><i class="fa-solid fa-chart-line"></i> Overview</a></li>
       <li><a href="{% url 'vendor_product_list' %}"><i class="fa-solid fa-list"></i> My Products</a></li>
       <li class="active"><a href="{% url 'add_product' %}"><i class="fa-solid fa-plus"></i> Add Product</a></li>
       <li><a href="{% url 'update_vendor_profile' %}"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
     </ul>
-
     <div class="sidebar-logout">
       <a href="{% url 'logout' %}">
         <i class="fa-solid fa-right-from-bracket"></i> Sign Out
@@ -133,8 +63,8 @@
         </div>
 
         <div class="form-group">
-          <label>Category *</label>
-          <select name="category" required>
+          <label>Category</label>
+          <select name="category">
             <option value="">Select category</option>
             {% for cat in categories %}
               <option value="{{ cat.id }}">{{ cat.name }}</option>
@@ -148,13 +78,18 @@
         </div>
 
         <div class="form-group">
-          <label>Price *</label>
+          <label>Price (Rs.) *</label>
           <input type="number" name="price" step="0.01" required>
         </div>
 
         <div class="form-group">
-          <label>Cook Time (minutes) *</label>
-          <input type="number" name="cook_time" required>
+          <label>Stock *</label>
+          <input type="number" name="stock" value="0" required>
+        </div>
+
+        <div class="form-group">
+          <label>Cook Time (minutes)</label>
+          <input type="number" name="cook_time" value="0">
         </div>
 
         <div class="form-group">

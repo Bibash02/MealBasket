@@ -7,12 +7,26 @@
 <title>Edit Product – MealBasket</title>
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  .page { max-width: 800px; margin: 2rem auto; padding: 1rem; }
+  .form-card { background: #fff; padding: 2rem; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.05); }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+  .form-row { display: flex; gap: 1rem; }
+  .form-row .form-group { flex: 1; }
+  .form-actions { margin-top: 1.5rem; }
+  .btn-save { padding: 0.7rem 1.5rem; background: #22c55e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+  .btn-save:hover { background: #16a34a; }
+  .btn-cancel { padding: 0.7rem 1.5rem; background: #f3f4f6; color: #333; text-decoration: none; border-radius: 6px; margin-left: 0.5rem; }
+  .btn-cancel:hover { background: #e5e7eb; }
+</style>
 </head>
 <body>
+
 <div class="page">
 
   <div class="dashboard-header">
-   
     <a href="{% url 'vendor_dashboard' %}" class="btn-cancel"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
   </div>
 
@@ -25,11 +39,11 @@
     </div>
 
     <div class="form-group">
-      <label>Category *</label>
-      <select name="category" required>
+      <label>Category</label>
+      <select name="category">
         <option value="">Select category</option>
         {% for category in categories %}
-          <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>
+          <option value="{{ category.id }}" {% if product.category and category.id == product.category.id %}selected{% endif %}>
             {{ category.name }}
           </option>
         {% endfor %}
@@ -38,23 +52,22 @@
 
     <div class="form-group">
       <label>Description *</label>
-      <input type="text" name="description" value="{{ product.description }}" required>
+      <textarea name="description" required>{{ product.description }}</textarea>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label>Price per Serving (Rs) *</label>
+        <label>Price (Rs) *</label>
         <input type="number" name="price" value="{{ product.price }}" step="0.01" required>
       </div>
       <div class="form-group">
         <label>Cook Time (minutes)</label>
         <input type="number" name="cook_time" value="{{ product.cook_time }}">
       </div>
-    </div>
-
-    <div class="form-group">
-      <label>Calories per Serving</label>
-      <input type="number" name="calories" value="{{ product.calories }}">
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" name="stock" value="{{ product.stock }}" required>
+      </div>
     </div>
 
     <div class="form-group">
@@ -71,7 +84,9 @@
       <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
       <a href="{% url 'vendor_dashboard' %}" class="btn-cancel">Cancel</a>
     </div>
+
   </form>
 </div>
+
 </body>
 </html>

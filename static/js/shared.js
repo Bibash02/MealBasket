@@ -52,24 +52,3 @@ function showDashPanel(panelId) {
     if (onclick.includes(panelId)) a.classList.add('active');
   });
 }
-
-// ===== AUTH GUARD =====
-function requireAuth(role = null) {
-  const user = getCurrentUser();
-
-  if (!user) {
-    window.location.replace('/signin/');
-    return null;
-  }
-
-  if (role && user.role !== role) {
-    if (user.role === 'vendor') {
-      window.location.replace('/vendor/dashboard/');
-    } else {
-      window.location.replace('/customer/dashboard/');
-    }
-    return null;
-  }
-
-  return user;
-}
