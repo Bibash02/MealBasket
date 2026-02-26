@@ -8,6 +8,9 @@ from .utils import generate_signature
 from django.conf import settings
 import uuid
 import hashlib  
+import base64
+import hmac
+import json
 
 # Create your views here.
 def home(request):
@@ -173,19 +176,20 @@ def update_cart_item(request, item_id):
 def checkout(request):
     profile = get_object_or_404(UserProfile, user=request.user, role='customer')
     cart_items = CartItem.objects.filter(customer=profile)
+
     if not cart_items.exists():
         return redirect('customer_dashboard')
 
     total = sum(item.quantity * item.product.price for item in cart_items)
-    total_amount = "{:.2f}".format(total)  # Important: 2 decimal places
+    total_amount = "{:.2f}".format(total)
 
-    if request.method == 'POST':
-        full_name = request.POST.get('full_name', request.user.get_full_name() or request.user.username)
-        email = request.POST.get('email', request.user.email)
-        phone = request.POST.get('phone', '')
-        address_text = request.POST.get('address', '')
-        city = request.POST.get('city', '')
-        payment_type = request.POST.get('payment_type', 'cod')
+    if request.method == "POST":
+        full_name = request.POST.get("full_name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        address_text = request.POST.get("address")
+        city = request.POST.get("city")
+        payment_type = request.POST.get("payment_type")
 
         address = Address.objects.create(
             user=request.user,
@@ -219,56 +223,99 @@ def checkout(request):
 
         cart_items.delete()
 
-        if payment_type == 'cod':
-            order.status = 'Confirmed'
+        if payment_type == "cod":
+            order.status = "Confirmed"
             order.save()
-            return render(request, 'payment_success.html', {'order': order})
+            return render(request, "payment_success.html", {"order": order})
 
-        # ======================
-        # eSewa v2 Payment
-        # ======================
-        pid = order.transaction_uuid
-        amt = total_amount
-        scd = settings.ESEWA_PRODUCT_CODE  # merchant code
-        secret_key = settings.ESEWA_SECRET_KEY  # merchant secret key
+        # Redirect to eSewa process view
+        return redirect("process_payment", order_id=order.id)
 
-        # Correct signature: SHA256 of pid + amt + scd + secret_key
-        signature_string = f"{pid}{amt}{scd}{secret_key}"
-        signature = hashlib.sha256(signature_string.encode()).hexdigest()
+    return render(request, "checkout.html", {
+        "cart_items": cart_items,
+        "total": total
+    })
 
-        context = {
-            "amt": amt,
-            "pid": pid,
-            "scd": scd,
-            "su": request.build_absolute_uri('/payment/success/'),
-            "fu": request.build_absolute_uri('/payment/failed/'),
-            "signature": signature,
-            "order": order
-        }
+def process_payment(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
 
-        return render(request, 'esewa_payment.html', context)
+    total_amount = "{:.2f}".format(order.amount)
+    transaction_uuid = order.transaction_uuid
+    product_code = settings.ESEWA_PRODUCT_CODE
+    secret_key = settings.ESEWA_SECRET_KEY
 
-    return render(request, 'checkout.html', {'cart_items': cart_items, 'total': total})
+    # Signed fields
+    signed_field_names = "total_amount,transaction_uuid,product_code"
+
+    # Data string in exact same order
+    data = f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={product_code}"
+
+    # HMAC SHA256
+    hmac_sha256 = hmac.new(
+        secret_key.encode('utf-8'),
+        data.encode('utf-8'),
+        hashlib.sha256
+    ).digest()
+
+    signature = base64.b64encode(hmac_sha256).decode()
+
+    context = {
+        "total_amount": total_amount,
+        "transaction_uuid": transaction_uuid,
+        "product_code": product_code,
+        "success_url": request.build_absolute_uri(
+            reverse("payment_success")
+        ),
+        "failure_url": request.build_absolute_uri(
+            reverse("payment_failed")
+        ),
+        "signature": signature,
+        "signed_field_names": signed_field_names
+    }
+
+    return render(request, "esewa_payment.html", context)
 
 def payment_success(request):
-    # Get eSewa query parameters
-    pid = request.GET.get('pid')
-    refId = request.GET.get('refId')
+    data = request.GET.get("data")
 
-    order = get_object_or_404(Order, id=pid, customer__user=request.user)
-    order.status = 'paid'
-    order.esewa_tid = refId
-    order.save()
-    messages.success(request, 'Payment successful! Your order has been placed.')
-    return redirect('customer_dashboard')
+    if not data:
+        return redirect("customer_dashboard")
 
-def payment_fail(request):
-    pid = request.GET.get('pid')
-    order = get_object_or_404(Order, id=pid, customer__user=request.user)
-    order.status = 'failed'
-    order.save()
-    messages.error(request, 'Payment failed or cancelled. Please try again.')
-    return redirect('customer_dashboard')
+    try:
+        # Decode Base64 response
+        decoded_data = base64.b64decode(data).decode("utf-8")
+
+        # Convert JSON string to dictionary
+        response_data = json.loads(decoded_data)
+
+        transaction_uuid = response_data.get("transaction_uuid")
+        status = response_data.get("status")
+
+        order = Order.objects.get(transaction_uuid=transaction_uuid)
+
+        if status == "COMPLETE":
+            order.status = "Confirmed"
+        else:
+            order.status = "Failed"
+
+        order.save()
+
+        return render(request, "payment_success.html", {"order": order})
+
+    except Exception as e:
+        print("Payment Success Error:", e)
+        return redirect("customer_dashboard")
+
+def payment_failed(request):
+    transaction_uuid = request.GET.get("transaction_uuid")
+
+    try:
+        order = Order.objects.get(transaction_uuid=transaction_uuid)
+        order.status = "Failed"
+        order.save()
+        return render(request, "payment_failed.html", {"order": order})
+    except Order.DoesNotExist:
+        return redirect("customer_dashboard")
 
 def vender_dashboard(request):
     vendor_profile = get_object_or_404(UserProfile, user=request.user)

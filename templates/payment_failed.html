@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Payment Successful</title>
+<title>Payment Failed</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body{
-        font-family: 'DM Sans', sans-serif;
-        background:#f4f6f9;
+        font-family: 'DM Sans', sans-serif;;
+        background:#f8f9fa;
         display:flex;
         justify-content:center;
         align-items:center;
@@ -22,13 +22,13 @@
         text-align:center;
         width:400px;
     }
-    .success-icon{
+    .fail-icon{
         font-size:60px;
-        color:#28a745;
+        color:#dc3545;
     }
     h2{
         margin-top:15px;
-        color:#28a745;
+        color:#dc3545;
     }
     p{
         color:#555;
@@ -38,30 +38,29 @@
         display:inline-block;
         margin-top:20px;
         padding:10px 20px;
-        background:#28a745;
+        background:#dc3545;
         color:#fff;
         text-decoration:none;
         border-radius:6px;
         transition:0.3s;
     }
     .btn:hover{
-        background:#218838;
+        background:#c82333;
     }
 </style>
 </head>
 <body>
 
 <div class="card">
-    <div class="success-icon">✔</div>
-    <h2>Payment Successful!</h2>
+    <div class="fail-icon">✖</div>
+    <h2>Payment Failed</h2>
 
     <p><strong>Order ID:</strong> {{ order.id }}</p>
-    <p><strong>Transaction:</strong> {{ order.transaction_uuid }}</p>
-    <p><strong>Amount:</strong> Rs. {{ order.amount }}</p>
+    <p>Unfortunately, your payment could not be processed.</p>
 
-    <p>Your order has been confirmed and is being processed.</p>
+    <p>Please try again or choose another payment method.</p>
 
-    <a href="{% url 'customer_dashboard' %}" class="btn">Back to Dashboard</a>
+    <a href="{% url 'checkout' %}" class="btn">Try Again</a>
 </div>
 
 </body>

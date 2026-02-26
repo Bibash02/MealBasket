@@ -20,8 +20,9 @@ urlpatterns = [
     path('customer/cart/remove/<int:item_id>/', remove_cart_item, name='remove_cart_item'),
 
     path('customer/checkout', checkout, name='checkout'),
+    path('customer/payment/<int:order_id>/', process_payment, name='process_payment'),
     path('customer/payment/success', payment_success, name='payment_success'),
-    path('customer/payment/cancel', payment_fail, name='payment_fail'),
+    path('customer/payment/cancel', payment_failed, name='payment_failed'),
 
     path('vendor/save-product', save_product, name='save_product'),
     path('vendor/product/list', my_products, name='vendor_product_list'),
