@@ -219,7 +219,36 @@ footer { background:var(--dark); color:rgba(255,255,255,0.7); padding:4rem 7% 2r
     </div>
     <a class="btn-primary" href="{% url 'signin' %}">View Full Menu</a>
   </div>
-  <div class="meals-grid" id="home-meals-grid"></div>
+  <div class="meals-grid" id="home-meals-grid">
+  {% for product in products %}
+    <div class="meal-card">
+      
+      <div class="meal-img">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% endif %}
+      </div>
+
+      <div class="meal-content">
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description|truncatewords:10 }}</p>
+
+        <div class="meal-meta">
+          <span>⏱ {{ product.cook_time }} mins</span>
+          <span>🔥 {{ product.calories }} cal</span>
+        </div>
+
+        <div class="meal-footer">
+          <strong>Rs. {{ product.price }}</strong>
+          <a href="{% url 'signin' %}" class="btn-secondary">Add to Cart</a>
+        </div>
+      </div>
+
+    </div>
+  {% empty %}
+    <p>No meals available.</p>
+  {% endfor %}
+</div>
 </section>
 
 <!-- Footer -->

@@ -101,10 +101,17 @@
       <div class="user-role">Customer</div>
     </div>
     <ul class="sidebar-nav">
-      <li><a  href="{% url 'customer_dashboard' %}" class="active"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
+      <li><a href="{% url 'customer_dashboard' %}" class="active"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
       <li><a onclick="showDashPanel('c-orders')"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
-      <li><a onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">0</span></a></li>
-      <li><a onclick="showDashPanel('c-profile')"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+      <li>
+        <a href="{% url 'view_cart' %}">
+          <i class="fa-solid fa-cart-shopping"></i> Cart
+          <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">
+            {{ cart_count }}
+          </span>
+        </a>
+      </li>
+      <li><a href="{% url 'update_customer_profile' %}"><i class="fa-solid fa-user-circle"></i> Profile</a></li>
     </ul>
     <div class="sidebar-logout">
       <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
@@ -121,7 +128,7 @@
 
         <div class="form-group">
           <label>Business Name</label>
-          <input type="text" name="full_name" value="{{ vendor_profile.full_name }}">
+          <input type="text" name="full_name" value="{{ request.user.get_full_name }}" required>
         </div>
 
         <div class="form-group">

@@ -20,7 +20,11 @@ def auth(request):
     return render(request, 'auth.html')
 
 def test(request):
-    return render(request, 'test.html')
+    latest_products = Product.objects.all().order_by('-created_at')[:4]
+
+    return render(request, 'test.html', {
+        'products': latest_products
+    })
 
 def signup_view(request):
     if request.method == "POST":
