@@ -1,0 +1,363 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Dashboard – MealBasket</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-basket-shopping"></i>
+      <span>MealBasket</span>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-name">{{ profile.user.username }}</div>
+      <div class="user-role">Delivery Rider</div>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a onclick="showDashPanel('d-overview')" class="active"><i class="fa-solid fa-gauge-high"></i> Overview</a></li>
+      <li><a onclick="showDashPanel('d-pending')"><i class="fa-solid fa-clock-rotate-left"></i> Pending Orders</a></li>
+      <li><a onclick="showDashPanel('d-active')"><i class="fa-solid fa-motorcycle"></i> Active Delivery</a></li>
+      <li><a onclick="showDashPanel('d-history')"><i class="fa-solid fa-rectangle-list"></i> History</a></li>
+      <li><a onclick="showDashPanel('d-earnings')"><i class="fa-solid fa-wallet"></i> Earnings</a></li>
+      <li><a href=""><i class="fa-solid fa-user-circle"></i> Profile</a></li>
+    </ul>
+    <div class="sidebar-logout">
+      <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ===== OVERVIEW PANEL ===== -->
+    <div class="dash-panel active" id="d-overview">
+      <div class="dash-header">
+        <h1>Overview</h1>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <i class="fa-solid fa-truck-fast stat-icon"></i>
+          <div class="stat-info">
+            <span class="stat-value">{{ total_deliveries }}</span>
+            <span class="stat-label">Total Deliveries</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-wallet stat-icon"></i>
+          <div class="stat-info">
+            <span class="stat-value">Rs. {{ today_earnings }}</span>
+            <span class="stat-label">Today's Earnings</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-star stat-icon"></i>
+          <div class="stat-info">
+            <span class="stat-value">{{ avg_rating }}</span>
+            <span class="stat-label">Avg. Rating</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-circle-check stat-icon"></i>
+          <div class="stat-info">
+            <span class="stat-value">{{ completion_rate }}%</span>
+            <span class="stat-label">Completion Rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <h2>Recent Orders</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Address</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in recent_orders %}
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.customer_name }}</td>
+              <td>{{ order.address }}</td>
+              <td>Rs. {{ order.total }}</td>
+              <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="empty-row">No recent orders.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== PENDING ORDERS PANEL ===== -->
+    <div class="dash-panel" id="d-pending">
+      <div class="dash-header">
+        <h1>Pending Orders</h1>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Address</th>
+              <th>Amount</th>
+              <th>Placed</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in pending_orders %}
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>
+                {{ order.customer_name }}<br>
+                <small>{{ order.phone }}</small>
+              </td>
+              <td>{{ order.item_count }} item(s)</td>
+              <td>{{ order.address }}</td>
+              <td>Rs. {{ order.total }}</td>
+              <td>{{ order.created_at|timesince }} ago</td>
+              <td>
+                <form method="POST" action="{% url 'accept_order' order.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-hand-point-up"></i> Accept
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="empty-row">No pending orders right now.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== ACTIVE DELIVERY PANEL ===== -->
+    <div class="dash-panel" id="d-active">
+      <div class="dash-header">
+        <h1>Active Delivery</h1>
+      </div>
+
+      {% if active_order %}
+
+      <div class="order-detail-card">
+        <div class="order-detail-header">
+          <h2>Order #{{ active_order.id }}</h2>
+          <span class="badge badge-transit">On the Way</span>
+        </div>
+
+        <div class="order-detail-grid">
+          <div class="detail-field">
+            <label>Customer</label>
+            <span>{{ active_order.customer_name }}</span>
+          </div>
+          <div class="detail-field">
+            <label>Phone</label>
+            <span>{{ active_order.phone }}</span>
+          </div>
+          <div class="detail-field">
+            <label>Pickup From</label>
+            <span>{{ active_order.restaurant }}</span>
+          </div>
+          <div class="detail-field">
+            <label>Drop Address</label>
+            <span>{{ active_order.address }}</span>
+          </div>
+          <div class="detail-field">
+            <label>Payment</label>
+            <span>{{ active_order.payment_method }}</span>
+          </div>
+          <div class="detail-field">
+            <label>Order Total</label>
+            <span>Rs. {{ active_order.total }}</span>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <h2>Items in this Order</h2>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in active_order.items.all %}
+              <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>Rs. {{ item.product.price }}</td>
+                <td>Rs. {{ item.subtotal }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="order-actions">
+          <form method="POST" action="{% url 'mark_delivered' active_order.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-check"></i> Mark as Delivered
+            </button>
+          </form>
+          <form method="POST" action="{% url 'mark_failed' active_order.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-disabled">
+              <i class="fa-solid fa-xmark"></i> Mark as Failed
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {% else %}
+      <div class="empty-state">
+        <i class="fa-solid fa-motorcycle"></i>
+        <p>No active delivery at the moment.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- ===== HISTORY PANEL ===== -->
+    <div class="dash-panel" id="d-history">
+      <div class="dash-header">
+        <h1>Delivery History</h1>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Address</th>
+              <th>Amount</th>
+              <th>Earned</th>
+              <th>Delivered At</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in delivery_history %}
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.customer_name }}</td>
+              <td>{{ order.address }}</td>
+              <td>Rs. {{ order.total }}</td>
+              <td>Rs. {{ order.delivery_fee }}</td>
+              <td>{{ order.delivered_at|date:"N j, g:i a" }}</td>
+              <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="empty-row">No delivery history yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== EARNINGS PANEL ===== -->
+    <div class="dash-panel" id="d-earnings">
+      <div class="dash-header">
+        <h1>Earnings</h1>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <i class="fa-solid fa-calendar-day stat-icon"></i>
+          <div class="stat-info">
+            <span class="stat-value">Rs. {{ today_earnings }}</span>
+            <span class="stat-label">Today</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-calendar-week stat-icon"></i>
+          <div class="stat-info">
+            <span class="stat-value">Rs. {{ week_earnings }}</span>
+            <span class="stat-label">This Week</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-calendar stat-icon"></i>
+          <div class="stat-info">
+            <span class="stat-value">Rs. {{ month_earnings }}</span>
+            <span class="stat-label">This Month</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <h2>Earnings Breakdown</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Delivered At</th>
+              <th>Delivery Fee</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in delivery_history %}
+            {% if order.status == 'delivered' %}
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.customer_name }}</td>
+              <td>{{ order.delivered_at|date:"N j, g:i a" }}</td>
+              <td>Rs. {{ order.delivery_fee }}</td>
+            </tr>
+            {% endif %}
+            {% empty %}
+            <tr><td colspan="4" class="empty-row">No earnings yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+<script src="{% static 'js/shared.js' %}"></script>
+<script>
+function showDashPanel(id) {
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+
+</body>
+</html>

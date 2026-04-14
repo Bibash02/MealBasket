@@ -28,6 +28,9 @@ class CartItemAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display  = ['user', 'full_name', 'email', 'phone', 'address', 'city', 'country', 'amount', 'payment_type', 'transaction_uuid', 'status', 'created_at']
+    search_fields = ['user__username', 'full_name', 'email', 'country', 'payment_type']
+    list_filter = ['status', 'payment_type', 'created_at']
+    list_per_page = 10
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):

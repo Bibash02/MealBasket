@@ -59,6 +59,8 @@ def signup_view(request):
             return redirect("vendor_dashboard")
         elif role == "customer":
             return redirect("customer_dashboard")
+        elif role == 'delivery':
+            return redirect("delivery_dashboard")
         else:
             return redirect("signin")
 
@@ -150,7 +152,7 @@ def add_to_cart(request, product_id):
 def view_cart(request):
     profile = get_object_or_404(UserProfile, user=request.user, role='customer')
     cart_items = CartItem.objects.filter(customer=profile)
-    total = sum(item.quantity * float(item.product.price) for item in cart_items)
+    total = sum(item.quantity * item.product.price for item in cart_items)
     return render(request, 'cart.html', {
         'cart_items': cart_items, 
         'total': total
@@ -471,3 +473,6 @@ def my_products(request):
         "products": products
     }
     return render(request, "vendor_product_list.html", context)
+
+def delivery_dashboard(request):
+    return render(request, 'delivery_dashboard.html')

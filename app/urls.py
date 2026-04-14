@@ -30,4 +30,6 @@ urlpatterns = [
     path('vendor/product/edit/<int:product_id>/', edit_product, name='edit_product'),
     path('vendor/product/delete/<int:product_id>/', delete_product, name='delete_product'),
     path('vendor/profile', update_vendor_profile, name='update_vendor_profile'),
+
+    path('delivery/dashboard', delivery_dashboard, name='delivery_dashboard'),
 ]

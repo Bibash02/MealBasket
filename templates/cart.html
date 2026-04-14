@@ -104,7 +104,7 @@
     </div>
     <ul class="sidebar-nav">
       <li><a href="{% url 'customer_dashboard' %}"><i class="fa-solid fa-utensils"></i> Browse Meals</a></li>
-      <li><a href=""><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
+      <li><a onclick="showDashPanel('c-orders')"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
       <li><a class="active" href="{% url 'view_cart' %}"><i class="fa-solid fa-cart-shopping"></i> Cart 
         <span id="cart-count-badge" style="background:var(--green);color:#fff;border-radius:50px;padding:2px 8px;font-size:0.75rem;margin-left:4px;">
           {{ cart_items.count }}
@@ -160,6 +160,6 @@
   </main>
 
 </div>
-
+<script src="{% static 'js/shared.js' %}"></script>
 </body>
 </html>
