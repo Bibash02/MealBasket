@@ -81,6 +81,8 @@ def signin_view(request):
                 return redirect("vendor_dashboard")
             elif user.profile.role == "customer":
                 return redirect("customer_dashboard")
+            elif user.profile.role == "delivery":
+                return redirect("delivery_dashboard")
             else:
                 return redirect("signin")
         else:
